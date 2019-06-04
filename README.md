@@ -1,2 +1,2 @@
 # Ladybug
-A tiny 3d graphics engine
+A Tiny 3D Graphics Engine
