@@ -31,6 +31,7 @@ public:
 	~Matrix4x4();
 
 	Matrix4x4 operator* (const Matrix4x4& rhs);
+	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);
 
 private:
 	static Matrix4x4 Multiply(const Matrix4x4& lhs, const Matrix4x4& rhs);

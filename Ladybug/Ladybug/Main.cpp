@@ -6,6 +6,14 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 
+void test_PrintMatrix(const Matrix4x4& M)
+{
+	printf("  %.5f %.5f %.5f %.5f\n", M.m00, M.m01, M.m02, M.m03);
+	printf("  %.5f %.5f %.5f %.5f\n", M.m10, M.m11, M.m12, M.m13);
+	printf("  %.5f %.5f %.5f %.5f\n", M.m20, M.m21, M.m22, M.m23);
+	printf("  %.5f %.5f %.5f %.5f\n", M.m30, M.m31, M.m32, M.m33);
+}
+
 void test_Matrix4x4()
 {
 	Matrix4x4 translationMatrix(
@@ -32,10 +40,22 @@ void test_Matrix4x4()
 	Matrix4x4 transformationMatrix = translationMatrix * rotationMatrix * scalingMatrix;
 
 	printf("Transformation Matrix is:\n");
-	printf("%.5f %.5f %.5f %.5f\n", transformationMatrix.m00, transformationMatrix.m01, transformationMatrix.m02, transformationMatrix.m03);
-	printf("%.5f %.5f %.5f %.5f\n", transformationMatrix.m10, transformationMatrix.m11, transformationMatrix.m12, transformationMatrix.m13);
-	printf("%.5f %.5f %.5f %.5f\n", transformationMatrix.m20, transformationMatrix.m21, transformationMatrix.m22, transformationMatrix.m23);
-	printf("%.5f %.5f %.5f %.5f\n", transformationMatrix.m30, transformationMatrix.m31, transformationMatrix.m32, transformationMatrix.m33);
+	test_PrintMatrix(transformationMatrix);
+}
+
+void test_PerspectiveMatrix()
+{
+	int screenWidth = 640;
+	int screenHeight = 480;
+	float fovy = 60;
+	float near = 0.3f;
+	float far = 1000.0f;
+
+	float aspect = (float)screenWidth / screenHeight;
+	Matrix4x4 perspectiveMatrix = Matrix4x4::Perspective(fovy, aspect, near, far);
+
+	printf("Perspective Matrix is:\n");
+	test_PrintMatrix(perspectiveMatrix);
 }
 
 int main()
@@ -43,6 +63,7 @@ int main()
 	printf("Welcome to Ladybug Engine!\n");
 
 	test_Matrix4x4();
+	test_PerspectiveMatrix();
 
 	return 0;
 }

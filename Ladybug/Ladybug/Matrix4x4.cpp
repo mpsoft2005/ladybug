@@ -1,3 +1,5 @@
+
+#include <math.h>
 #include <assert.h>
 
 #include "Matrix4x4.h"
@@ -53,6 +55,25 @@ Matrix4x4::~Matrix4x4()
 Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs)
 {
 	return Multiply(*this, rhs);
+}
+
+inline float Radians(float degree)
+{
+	return degree * (float)M_PI / 180;
+}
+
+Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
+{
+	float tanHalfFovy = tanf(Radians(fovy) / 2);
+
+	Matrix4x4 result;
+	result.m00 = 1 / (tanHalfFovy * aspect);
+	result.m11 = 1 / (tanHalfFovy);
+	result.m22 = -(zFar + zNear) / (zFar - zNear);
+	result.m23 = -2 * zFar*zNear / (zFar - zNear);
+	result.m32 = -1;
+
+	return result;
 }
 
 Matrix4x4 Matrix4x4::Multiply(const Matrix4x4& lhs, const Matrix4x4& rhs)
