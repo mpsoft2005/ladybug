@@ -74,6 +74,12 @@ Vector3 WorldToViewportPoint(Vector3 pos)
 	return Vector3(viewportX, viewportY, v2.w);
 }
 
+Vector3 WorldToScreenPoint(Vector3 pos)
+{
+	Vector3 viewportPoint = WorldToViewportPoint(pos);
+	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
+}
+
 void test_Raster()
 {
 	printf("MVP Matrix:\n");
@@ -83,4 +89,8 @@ void test_Raster()
 	Vector3 viewportPoint = WorldToViewportPoint(worldPoint);
 	printf("Viewport Point:\n");
 	test_PrintVector3(viewportPoint);
+
+	Vector3 screenPoint = WorldToScreenPoint(worldPoint);
+	printf("Screen Point:\n");
+	test_PrintVector3(screenPoint);
 }
