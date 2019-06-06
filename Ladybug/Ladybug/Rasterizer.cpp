@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <fstream>
 
-#include "Raster.h"
+#include "Rasterizer.h"
 
 #include "Vector3.h"
 #include "Vector4.h"

@@ -30,7 +30,7 @@
     <ClInclude Include="Test.h">
       <Filter>Tests</Filter>
     </ClInclude>
-    <ClInclude Include="Raster.h">
+    <ClInclude Include="Rasterizer.h">
       <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClCompile Include="Test.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Raster.cpp">
+    <ClCompile Include="Rasterizer.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

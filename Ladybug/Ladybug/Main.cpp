@@ -7,7 +7,7 @@
 #include "Matrix4x4.h"
 
 #include "Test.h"
-#include "Raster.h"
+#include "Rasterizer.h"
 
 int main()
 {
