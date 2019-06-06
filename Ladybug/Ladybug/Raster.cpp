@@ -116,9 +116,9 @@ void test_Raster()
 		Vector3 v1Raster = WorldToScreenPoint(v1World);
 		Vector3 v2Raster = WorldToScreenPoint(v2World);
 
-		ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-		ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-		ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << screenHeight - (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << screenHeight - (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << screenHeight - (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << screenHeight - (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << screenHeight - (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << screenHeight - (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
 	}
 
 
