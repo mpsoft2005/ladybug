@@ -30,6 +30,9 @@
     <ClInclude Include="Test.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="Raster.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vector3.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Test.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Raster.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

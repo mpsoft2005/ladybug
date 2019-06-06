@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "Matrix4x4.h"
+#include "Vector3.h"
 #include "Vector4.h"
 
 const Matrix4x4 Matrix4x4::zero(Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0));
@@ -54,31 +55,8 @@ Matrix4x4::~Matrix4x4()
 
 Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs)
 {
-	return Multiply(*this, rhs);
-}
-
-inline float Radians(float degree)
-{
-	return degree * (float)M_PI / 180;
-}
-
-Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
-{
-	float tanHalfFovy = tanf(Radians(fovy) / 2);
-
 	Matrix4x4 result;
-	result.m00 = 1 / (tanHalfFovy * aspect);
-	result.m11 = 1 / (tanHalfFovy);
-	result.m22 = -(zFar + zNear) / (zFar - zNear);
-	result.m23 = -2 * zFar*zNear / (zFar - zNear);
-	result.m32 = -1;
-
-	return result;
-}
-
-Matrix4x4 Matrix4x4::Multiply(const Matrix4x4& lhs, const Matrix4x4& rhs)
-{
-	Matrix4x4 result;
+	const Matrix4x4& lhs = *this;
 	result.m00 = lhs.m00 * rhs.m00 + lhs.m01 * rhs.m10 + lhs.m02 * rhs.m20 + lhs.m03 * rhs.m30;
 	result.m01 = lhs.m00 * rhs.m01 + lhs.m01 * rhs.m11 + lhs.m02 * rhs.m21 + lhs.m03 * rhs.m31;
 	result.m02 = lhs.m00 * rhs.m02 + lhs.m01 * rhs.m12 + lhs.m02 * rhs.m22 + lhs.m03 * rhs.m32;
@@ -95,5 +73,49 @@ Matrix4x4 Matrix4x4::Multiply(const Matrix4x4& lhs, const Matrix4x4& rhs)
 	result.m31 = lhs.m30 * rhs.m01 + lhs.m31 * rhs.m11 + lhs.m32 * rhs.m21 + lhs.m33 * rhs.m31;
 	result.m32 = lhs.m30 * rhs.m02 + lhs.m31 * rhs.m12 + lhs.m32 * rhs.m22 + lhs.m33 * rhs.m32;
 	result.m33 = lhs.m30 * rhs.m03 + lhs.m31 * rhs.m13 + lhs.m32 * rhs.m23 + lhs.m33 * rhs.m33;
+	return result;
+}
+
+Vector4 Matrix4x4::operator* (const Vector4& vector)
+{
+	Vector4 result;
+	const Matrix4x4& lhs = *this;
+	result.x = lhs.m00 * vector.x + lhs.m01 * vector.y + lhs.m02 * vector.z + lhs.m03 * vector.w;
+	result.y = lhs.m10 * vector.x + lhs.m11 * vector.y + lhs.m12 * vector.z + lhs.m13 * vector.w;
+	result.z = lhs.m20 * vector.x + lhs.m21 * vector.y + lhs.m22 * vector.z + lhs.m23 * vector.w;
+	result.w = lhs.m30 * vector.x + lhs.m31 * vector.y + lhs.m32 * vector.z + lhs.m33 * vector.w;
+	return result;
+}
+
+Vector3 Matrix4x4::MultiplyPoint(const Vector3& point)
+{
+	Vector3 result;
+	result.x = m00 * point.x + m01 * point.y + m02 * point.z + m03;
+	result.y = m10 * point.x + m11 * point.y + m12 * point.z + m13;
+	result.z = m20 * point.x + m21 * point.y + m22 * point.z + m23;
+	float num = m30 * point.x + m31 * point.y + m32 * point.z + m33;
+	num = 1.0f / num;
+	result.x *= num;
+	result.y *= num;
+	result.z *= num;
+	return result;
+}
+
+static inline float Radians(float degree)
+{
+	return degree * (float)M_PI / 180;
+}
+
+Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
+{
+	float tanHalfFovy = tanf(Radians(fovy) / 2);
+
+	Matrix4x4 result;
+	result.m00 = 1 / (tanHalfFovy * aspect);
+	result.m11 = 1 / (tanHalfFovy);
+	result.m22 = -(zFar + zNear) / (zFar - zNear);
+	result.m23 = -2 * zFar*zNear / (zFar - zNear);
+	result.m32 = -1;
+
 	return result;
 }

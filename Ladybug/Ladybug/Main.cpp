@@ -5,14 +5,15 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
+
 #include "Test.h"
+#include "Raster.h"
 
 int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	test_Matrix4x4();
-	test_PerspectiveMatrix();
+	test_Raster();
 
 	return 0;
 }

@@ -2,9 +2,14 @@
 
 #include "Test.h"
 
+#include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
 
+void test_PrintVector3(const Vector3& v)
+{
+	printf("  %.5f %.5f %.5f\n", v.x, v.y, v.z);
+}
 
 void test_PrintMatrix(const Matrix4x4& M)
 {

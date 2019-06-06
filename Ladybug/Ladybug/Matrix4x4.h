@@ -1,5 +1,6 @@
 #pragma once
 
+class Vector3;
 class Vector4;
 
 class Matrix4x4
@@ -31,10 +32,9 @@ public:
 	~Matrix4x4();
 
 	Matrix4x4 operator* (const Matrix4x4& rhs);
+	Vector4 operator* (const Vector4& vector);
+
+	Vector3 MultiplyPoint(const Vector3& point);
 	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);
-
-private:
-	static Matrix4x4 Multiply(const Matrix4x4& lhs, const Matrix4x4& rhs);
-
 };
 
