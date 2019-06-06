@@ -1,4 +1,6 @@
+
 #include <stdio.h>
+#include <fstream>
 
 #include "Raster.h"
 
@@ -80,6 +82,8 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
+
+
 void test_Raster()
 {
 	printf("MVP Matrix:\n");
@@ -96,4 +100,29 @@ void test_Raster()
 	Vector3 screenPoint = WorldToScreenPoint(worldPoint);
 	printf("Screen Point:\n");
 	test_PrintVector3(screenPoint);
+
+
+	std::ofstream ofs;
+	ofs.open("./Plane.svg");
+	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
+	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(0, 0, 255); stroke - width:3; stroke:rgb(0, 0, 0)\" />";
+
+	for (int i = 0; i < 2; ++i) {
+		const Vector3& v0World = vertices[tris[i].v0];
+		const Vector3& v1World = vertices[tris[i].v1];
+		const Vector3& v2World = vertices[tris[i].v2];
+
+		Vector3 v0Raster = WorldToScreenPoint(v0World);
+		Vector3 v1Raster = WorldToScreenPoint(v1World);
+		Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+		ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+	}
+
+
+	ofs << "</svg>\n";
+	ofs.close();
+
 }
