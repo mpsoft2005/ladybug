@@ -13,7 +13,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	test_Raster();
+	test_Rasterization();
 
 	return 0;
 }

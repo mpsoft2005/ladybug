@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <fstream>
+#include <algorithm>
 
 #include "Rasterizer.h"
 
@@ -60,6 +61,9 @@ static Tri tris[]{
 
 const int screenWidth = 640;
 const int screenHeight = 480;
+
+const float nearClipping = 0.3f;
+const float farClipping = 1000.0f;
 
 Vector3 WorldToViewportPoint(Vector3 pos)
 {
@@ -125,4 +129,103 @@ void test_Raster()
 	ofs << "</svg>\n";
 	ofs.close();
 
+}
+
+inline float min(float a, float b, float c)
+{
+	return std::min(a, std::min(b, c));
+}
+
+inline float max(float a, float b, float c)
+{
+	return std::max(a, std::max(b, c));
+}
+
+inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
+{
+	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
+}
+
+void test_Rasterization()
+{
+	Vector4 *frameBuffer = new Vector4[screenWidth * screenHeight];
+	float *depthBuffer = new float[screenWidth * screenHeight];
+
+	for (int i = 0; i < screenWidth * screenHeight; i++)
+	{
+		// clear frame buffer
+		frameBuffer[i].x = 20 / 255.0f;
+		frameBuffer[i].y = 20 / 255.0f;
+		frameBuffer[i].z = 20 / 255.0f;
+		frameBuffer[i].w = 0;
+		// clear z buffer
+		depthBuffer[i] = farClipping;
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		const Vector3& v0World = vertices[tris[i].v0];
+		const Vector3& v1World = vertices[tris[i].v1];
+		const Vector3& v2World = vertices[tris[i].v2];
+
+		Vector3 v0Raster = WorldToScreenPoint(v0World);
+		Vector3 v1Raster = WorldToScreenPoint(v1World);
+		Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+		float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+
+		float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
+		float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
+		float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
+		float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+
+		int x0 = std::max(0, (int)(std::roundf(xmin)));
+		int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
+		int y0 = std::max(0, (int)(std::roundf(ymin)));
+		int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
+
+		for (int y = y0; y <= y1; y++)
+		{
+			for (int x = x0; x <= x1; x++)
+			{
+				Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
+				float w0 = edgeFunction(v0Raster, v1Raster, pixelSample);
+				float w1 = edgeFunction(v1Raster, v2Raster, pixelSample);
+				float w2 = edgeFunction(v2Raster, v0Raster, pixelSample);
+
+				if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+				{
+					w0 /= area; w1 /= area; w2 /= area;
+					float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+					float z = 1 / oneOverZ;
+
+					int idx = y * screenWidth + x;
+					if (depthBuffer[idx] > z)
+					{
+						depthBuffer[idx] = z;
+						frameBuffer[idx].x = 89 / 255.0f;
+						frameBuffer[idx].y = 89 / 255.0f;
+						frameBuffer[idx].z = 89 / 255.0f;
+						frameBuffer[idx].w = 0;
+					}
+				}
+			}
+		}
+	}
+
+	std::ofstream ofs;
+	ofs.open("./Plane.ppm");
+	ofs << "P6\n" << screenWidth << " " << screenHeight << "\n255\n";
+	for (int y = screenHeight - 1; y >= 0; y--)
+	{
+		for (int x = 0; x < screenWidth; x++)
+		{
+			const Vector4& pixel = frameBuffer[y * screenWidth + x];
+			ofs << (uint8_t)(pixel.x * 255) << (uint8_t)(pixel.y * 255) << (uint8_t)(pixel.z * 255);
+		}
+	}
+	ofs.close();
+
+	delete[] frameBuffer;
+	delete[] depthBuffer;
 }
