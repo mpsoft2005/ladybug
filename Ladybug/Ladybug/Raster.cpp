@@ -86,6 +86,9 @@ void test_Raster()
 	test_PrintMatrix(mvpMatrix);
 
 	Vector3 worldPoint(1.000000f, -1.000000f, 5.000000f);
+	printf("World Point:\n");
+	test_PrintVector3(worldPoint);
+
 	Vector3 viewportPoint = WorldToViewportPoint(worldPoint);
 	printf("Viewport Point:\n");
 	test_PrintVector3(viewportPoint);
