@@ -117,6 +117,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Color32.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Test.h" />
@@ -124,6 +127,9 @@
     <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Color32.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Rasterizer.cpp" />

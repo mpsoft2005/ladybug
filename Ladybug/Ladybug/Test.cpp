@@ -1,7 +1,10 @@
+
+#include <fstream>
 #include <stdio.h>
 
 #include "Test.h"
 
+#include "Color.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
@@ -61,4 +64,20 @@ void test_PerspectiveMatrix()
 
 	printf("Perspective Matrix is:\n");
 	test_PrintMatrix(perspectiveMatrix);
+}
+
+void test_SavePPM(const char* filename, int width, int height, const Color* buffer)
+{
+	std::ofstream ofs;
+	ofs.open("./Plane.ppm");
+	ofs << "P6\n" << width << " " << height << "\n255\n";
+	for (int y = height - 1; y >= 0; y--)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			const Color& pixel = buffer[y * width + x];
+			ofs << (uint8_t)(pixel.r * 255) << (uint8_t)(pixel.g * 255) << (uint8_t)(pixel.b * 255);
+		}
+	}
+	ofs.close();
 }

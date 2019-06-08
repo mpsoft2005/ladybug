@@ -8,6 +8,8 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Matrix4x4.h"
+#include "Bitmap.h"
+#include "Color.h"
 #include "Test.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
@@ -148,16 +150,15 @@ inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 
 void test_Rasterization()
 {
-	Vector4 *frameBuffer = new Vector4[screenWidth * screenHeight];
+	Color *frameBuffer = new Color[screenWidth * screenHeight];
 	float *depthBuffer = new float[screenWidth * screenHeight];
 
 	for (int i = 0; i < screenWidth * screenHeight; i++)
 	{
 		// clear frame buffer
-		frameBuffer[i].x = 20 / 255.0f;
-		frameBuffer[i].y = 20 / 255.0f;
-		frameBuffer[i].z = 20 / 255.0f;
-		frameBuffer[i].w = 0;
+		frameBuffer[i].r = 49 / 255.0f;
+		frameBuffer[i].g = 77 / 255.0f;
+		frameBuffer[i].b = 121 / 255.0f;
 		// clear z buffer
 		depthBuffer[i] = farClipping;
 	}
@@ -203,28 +204,25 @@ void test_Rasterization()
 					if (depthBuffer[idx] > z)
 					{
 						depthBuffer[idx] = z;
-						frameBuffer[idx].x = 89 / 255.0f;
-						frameBuffer[idx].y = 89 / 255.0f;
-						frameBuffer[idx].z = 89 / 255.0f;
-						frameBuffer[idx].w = 0;
+						frameBuffer[idx].r = 89 / 255.0f;
+						frameBuffer[idx].g = 89 / 255.0f;
+						frameBuffer[idx].b = 89 / 255.0f;
 					}
 				}
 			}
 		}
 	}
 
-	std::ofstream ofs;
-	ofs.open("./Plane.ppm");
-	ofs << "P6\n" << screenWidth << " " << screenHeight << "\n255\n";
-	for (int y = screenHeight - 1; y >= 0; y--)
+	Bitmap bitmap(screenWidth, screenHeight);
+	for (int y = 0; y < screenHeight; y++)
 	{
 		for (int x = 0; x < screenWidth; x++)
 		{
-			const Vector4& pixel = frameBuffer[y * screenWidth + x];
-			ofs << (uint8_t)(pixel.x * 255) << (uint8_t)(pixel.y * 255) << (uint8_t)(pixel.z * 255);
+			const Color& pixel = frameBuffer[y * screenWidth + x];
+			bitmap.SetPixel(x, y, pixel);
 		}
 	}
-	ofs.close();
+	bitmap.Save("./Plane.bmp");
 
 	delete[] frameBuffer;
 	delete[] depthBuffer;
