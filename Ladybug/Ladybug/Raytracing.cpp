@@ -90,33 +90,32 @@ bool Raycast(const Ray& ray, const Triangle& tri, RaycastHit &hitInfo)
 	Vector3 P = ray.origin + ray.direction * t;
 
 	// inside-outside test
-	Vector3 C; // vector perpendicular to triangle's plane 
+	Vector3 C; // vector perpendicular to triangle's plane
 
 	// edge 0
 	Vector3 edge0 = tri.v1 - tri.v0;
 	Vector3 vp0 = P - tri.v0;
 	C = Vector3::Cross(edge0, vp0);
 	float w = Vector3::Dot(N, C);
-	if (w < 0) return false; // P is on the right side 
+	if (w < 0) return false; // P is on the right side
 
 	// edge 1
 	Vector3 edge1 = tri.v2 - tri.v1;
 	Vector3 vp1 = P - tri.v1;
 	C = Vector3::Cross(edge1, vp1);
 	float u = Vector3::Dot(N, C);
-	if (u < 0)  return false; // P is on the right side 
+	if (u < 0)  return false; // P is on the right side
 
 	// edge 2
 	Vector3 edge2 = tri.v0 - tri.v2;
 	Vector3 vp2 = P - tri.v2;
 	C = Vector3::Cross(edge2, vp2);
 	float v = Vector3::Dot(N, C);
-	if (v < 0) return false; // P is on the right side; 
+	if (v < 0) return false; // P is on the right side
 
 	hitInfo.point = P;
 	hitInfo.distance = t;
-	hitInfo.textureCoord.x = u / denom;
-	hitInfo.textureCoord.y = v / denom;
+	hitInfo.barycentricCoordinate = Vector3(u / denom, v / denom, w / denom);
 	return true;
 }
 
