@@ -121,8 +121,8 @@ bool Raycast(const Ray& ray, const Triangle& tri, RaycastHit &hitInfo)
 }
 
 // Returns a ray going from camera through a screen point.
-// Note: ray in camera space
-Ray ScreenPointToRay(float x, float y)
+// Note: primary ray(camera ray) in camera space
+Ray PrimaryRay(float x, float y)
 {
 	float viewportX = x / screenWidth;
 	float viewportY = y / screenHeight;
@@ -164,7 +164,7 @@ void test_Raytracing()
 
 	for (int y = 0; y < screenHeight; y++) {
 		for (int x = 0; x < screenWidth; x++) {
-			Ray ray = ScreenPointToRay(x + 0.5f, y + 0.5f);
+			Ray ray = PrimaryRay(x + 0.5f, y + 0.5f);
 			RaycastHit hitInfo;
 			for (int i = 0; i < numTris; i++) {
 				const Vector3& v0 = mesh->vertices[mesh->triangles[i * 3]];
