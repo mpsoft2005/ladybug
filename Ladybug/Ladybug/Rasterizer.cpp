@@ -58,25 +58,6 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
-Mesh* test_CreatePlaneMesh()
-{
-	Mesh* mesh = new Mesh();
-
-	mesh->vertices.push_back(Vector3());
-	mesh->vertices.push_back(Vector3(1.000000f, -1.000000f, 5.000000f));
-	mesh->vertices.push_back(Vector3(-1.000000f, -1.000000f, 5.000000f));
-	mesh->vertices.push_back(Vector3(1.000000f, 1.000000f, 5.000000f));
-	mesh->vertices.push_back(Vector3(-1.000000f, 1.000000f, 5.000000f));
-
-	mesh->triangles.push_back(2);
-	mesh->triangles.push_back(3);
-	mesh->triangles.push_back(1);
-	mesh->triangles.push_back(2);
-	mesh->triangles.push_back(4);
-	mesh->triangles.push_back(3);
-
-	return mesh;
-}
 
 void test_Raster()
 {

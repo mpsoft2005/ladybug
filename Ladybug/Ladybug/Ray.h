@@ -9,6 +9,7 @@ public:
 	Vector3 direction;
 
 public:
+	Ray();
 	Ray(const Vector3& origin, const Vector3& direction);
 	~Ray();
 };

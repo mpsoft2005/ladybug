@@ -23,10 +23,16 @@ public:
 
 	Vector3& operator=(const Vector3 &rhs);
 	Vector3 operator/(float d) const;
+	Vector3 operator+(const Vector3 &rhs) const;
+	Vector3 operator-(const Vector3 &rhs) const;
+	Vector3 operator*(float d) const;
 
 	Vector3 normalized() const;
 
 	static float Magnitude(const Vector3& vector);
 	static Vector3 Normalize(const Vector3& value);
+	static Vector3 Cross(const Vector3& lhs, const Vector3& rhs);
+	static float Dot(const Vector3& lhs, const Vector3& rhs);
+	static float Distance(const Vector3& a, const Vector3& b);
 };
 

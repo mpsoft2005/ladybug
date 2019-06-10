@@ -40,7 +40,22 @@ Vector3& Vector3::operator=(const Vector3 &rhs)
 
 Vector3 Vector3::operator/(float d) const
 {
-	return Vector3(this->x / d, this->y / d, this->z / d);
+	return Vector3(x / d, y / d, z / d);
+}
+
+Vector3 Vector3::operator+(const Vector3 &rhs) const
+{
+	return Vector3(x + rhs.x, y + rhs.y, z + rhs.z);
+}
+
+Vector3 Vector3::operator-(const Vector3 &rhs) const
+{
+	return Vector3(x - rhs.x, y - rhs.y, z - rhs.z);
+}
+
+Vector3 Vector3::operator*(float d) const
+{
+	return Vector3(x * d, y * d, z * d);
 }
 
 Vector3 Vector3::normalized() const
@@ -61,4 +76,20 @@ Vector3 Vector3::Normalize(const Vector3& value)
 		return value / num;
 	}
 	return zero;
+}
+
+Vector3 Vector3::Cross(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
+}
+
+float Vector3::Dot(const Vector3& lhs, const Vector3& rhs)
+{
+	return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+}
+
+float Vector3::Distance(const Vector3& a, const Vector3& b)
+{
+	Vector3 vector(a.x - b.x, a.y - b.y, a.z - b.z);
+	return sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }

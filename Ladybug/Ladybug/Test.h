@@ -1,8 +1,11 @@
 #pragma once
 
-class Color;
-class Vector3;
-class Matrix4x4;
+#include "Color.h"
+#include "Vector3.h"
+#include "Matrix4x4.h"
+#include "Mesh.h"
+
+Mesh* test_CreatePlaneMesh();
 
 void test_PrintVector3(const Vector3& v);
 void test_PrintMatrix(const Matrix4x4& M);
