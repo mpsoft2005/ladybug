@@ -162,7 +162,7 @@ void test_Raytracing()
 	}
 
 	Mesh* mesh = test_CreatePlaneMesh();
-	int numTris = mesh->triangles.size() / 3;
+	size_t numTris = mesh->triangles.size() / 3;
 
 	for (int y = 0; y < screenHeight; y++) {
 		for (int x = 0; x < screenWidth; x++) {

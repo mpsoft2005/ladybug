@@ -83,7 +83,7 @@ void test_Raster()
 	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(0, 0, 255); stroke - width:3; stroke:rgb(0, 0, 0)\" />";
 
 	Mesh* mesh = test_CreatePlaneMesh();
-	int numTris = mesh->triangles.size() / 3;
+	size_t numTris = mesh->triangles.size() / 3;
 
 	for (int i = 0; i < numTris; ++i) {
 		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
@@ -137,7 +137,7 @@ void test_Rasterization()
 	}
 
 	Mesh* mesh = test_CreatePlaneMesh();
-	int numTris = mesh->triangles.size() / 3;
+	size_t numTris = mesh->triangles.size() / 3;
 
 	for (int i = 0; i < numTris; ++i)
 	{
