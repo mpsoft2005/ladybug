@@ -10,6 +10,7 @@
 #include "Matrix4x4.h"
 #include "Bitmap.h"
 #include "Color.h"
+#include "Mesh.h"
 #include "Test.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
@@ -29,37 +30,6 @@ static Matrix4x4 projectionMatrix(
 );
 
 static Matrix4x4 mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
-
-
-
-static Vector3 vertices[] {
-	Vector3(),
-	Vector3(1.000000f, - 1.000000f, 5.000000f),
-	Vector3(-1.000000f, - 1.000000f, 5.000000f),
-	Vector3(1.000000f, 1.000000f, 5.000000f),
-	Vector3(-1.000000f, 1.000000f, 5.000000f)
-};
-
-struct Tri
-{
-public:
-	int v0;
-	int v1;
-	int v2;
-
-public:
-	Tri(int v0, int v1, int v2)
-	{
-		this->v0 = v0;
-		this->v1 = v1;
-		this->v2 = v2;
-	}
-};
-
-static Tri tris[]{
-	Tri(2, 3, 1),
-	Tri(2, 4, 3)
-};
 
 const int screenWidth = 640;
 const int screenHeight = 480;
@@ -88,7 +58,25 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
+Mesh* test_CreatePlaneMesh()
+{
+	Mesh* mesh = new Mesh();
 
+	mesh->vertices.push_back(Vector3());
+	mesh->vertices.push_back(Vector3(1.000000f, -1.000000f, 5.000000f));
+	mesh->vertices.push_back(Vector3(-1.000000f, -1.000000f, 5.000000f));
+	mesh->vertices.push_back(Vector3(1.000000f, 1.000000f, 5.000000f));
+	mesh->vertices.push_back(Vector3(-1.000000f, 1.000000f, 5.000000f));
+
+	mesh->triangles.push_back(2);
+	mesh->triangles.push_back(3);
+	mesh->triangles.push_back(1);
+	mesh->triangles.push_back(2);
+	mesh->triangles.push_back(4);
+	mesh->triangles.push_back(3);
+
+	return mesh;
+}
 
 void test_Raster()
 {
@@ -113,10 +101,13 @@ void test_Raster()
 	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
 	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(0, 0, 255); stroke - width:3; stroke:rgb(0, 0, 0)\" />";
 
-	for (int i = 0; i < 2; ++i) {
-		const Vector3& v0World = vertices[tris[i].v0];
-		const Vector3& v1World = vertices[tris[i].v1];
-		const Vector3& v2World = vertices[tris[i].v2];
+	Mesh* mesh = test_CreatePlaneMesh();
+	int numTris = mesh->triangles.size() / 3;
+
+	for (int i = 0; i < numTris; ++i) {
+		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
+		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
+		const Vector3& v2World = mesh->vertices[mesh->triangles[i * 3 + 2]];
 
 		Vector3 v0Raster = WorldToScreenPoint(v0World);
 		Vector3 v1Raster = WorldToScreenPoint(v1World);
@@ -131,6 +122,7 @@ void test_Raster()
 	ofs << "</svg>\n";
 	ofs.close();
 
+	delete mesh;
 }
 
 inline float min(float a, float b, float c)
@@ -163,11 +155,14 @@ void test_Rasterization()
 		depthBuffer[i] = farClipping;
 	}
 
-	for (int i = 0; i < 2; ++i)
+	Mesh* mesh = test_CreatePlaneMesh();
+	int numTris = mesh->triangles.size() / 3;
+
+	for (int i = 0; i < numTris; ++i)
 	{
-		const Vector3& v0World = vertices[tris[i].v0];
-		const Vector3& v1World = vertices[tris[i].v1];
-		const Vector3& v2World = vertices[tris[i].v2];
+		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
+		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
+		const Vector3& v2World = mesh->vertices[mesh->triangles[i * 3 + 2]];
 
 		Vector3 v0Raster = WorldToScreenPoint(v0World);
 		Vector3 v1Raster = WorldToScreenPoint(v1World);
@@ -224,6 +219,7 @@ void test_Rasterization()
 	}
 	bitmap.Save("./Plane.bmp");
 
+	delete mesh;
 	delete[] frameBuffer;
 	delete[] depthBuffer;
 }
