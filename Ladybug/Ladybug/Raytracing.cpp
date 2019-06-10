@@ -122,10 +122,10 @@ bool Raycast(const Ray& ray, const Triangle& tri, RaycastHit &hitInfo)
 
 // Returns a ray going from camera through a screen point.
 // Note: ray in camera space
-Ray ScreenPointToRay(int x, int y)
+Ray ScreenPointToRay(float x, float y)
 {
-	float viewportX = (float)x / screenWidth;
-	float viewportY = (float)y / screenHeight;
+	float viewportX = x / screenWidth;
+	float viewportY = y / screenHeight;
 
 	float ndcX = viewportX * 2 - 1;
 	float ndcY = viewportY * 2 - 1;
@@ -133,10 +133,8 @@ Ray ScreenPointToRay(int x, int y)
 	float nearX = ndcX * nearClippingPlaneWidth / 2;
 	float nearY = ndcY * nearClippingPlaneHeight / 2;
 
-	Vector3 origin(nearX, nearY, -nearClipping);
-	Vector3 direction = origin.normalized();
-
-	return Ray(origin, direction);
+	Vector3 direction(nearX, nearY, -nearClipping);
+	return Ray(Vector3::zero, direction);
 }
 
 void test_PrintRay(const Ray& ray)
@@ -166,7 +164,7 @@ void test_Raytracing()
 
 	for (int y = 0; y < screenHeight; y++) {
 		for (int x = 0; x < screenWidth; x++) {
-			Ray ray = ScreenPointToRay(x, y);
+			Ray ray = ScreenPointToRay(x + 0.5f, y + 0.5f);
 			RaycastHit hitInfo;
 			for (int i = 0; i < numTris; i++) {
 				const Vector3& v0 = mesh->vertices[mesh->triangles[i * 3]];

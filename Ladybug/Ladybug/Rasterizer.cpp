@@ -198,7 +198,7 @@ void test_Rasterization()
 			bitmap.SetPixel(x, y, pixel);
 		}
 	}
-	bitmap.Save("./Plane.bmp");
+	bitmap.Save("./test_Rasterization.bmp");
 
 	delete mesh;
 	delete[] frameBuffer;

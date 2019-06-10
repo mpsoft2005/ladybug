@@ -14,6 +14,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
+	test_Rasterization();
 	test_Raytracing();
 
 	return 0;
