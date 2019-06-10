@@ -20,5 +20,13 @@ public:
 	Vector3();
 	Vector3(float x, float y, float z);
 	~Vector3();
+
+	Vector3& operator=(const Vector3 &rhs);
+	Vector3 operator/(float d) const;
+
+	Vector3 normalized() const;
+
+	static float Magnitude(const Vector3& vector);
+	static Vector3 Normalize(const Vector3& value);
 };
 

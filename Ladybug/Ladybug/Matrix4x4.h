@@ -31,8 +31,8 @@ public:
 	Matrix4x4(const Vector4& column0, const Vector4& column1, const Vector4& column2, const Vector4& column3);
 	~Matrix4x4();
 
-	Matrix4x4 operator* (const Matrix4x4& rhs);
-	Vector4 operator* (const Vector4& vector);
+	Matrix4x4 operator* (const Matrix4x4& rhs) const;
+	Vector4 operator* (const Vector4& vector) const;
 
 	Vector3 MultiplyPoint(const Vector3& point);
 	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);

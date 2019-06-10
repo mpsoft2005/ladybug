@@ -53,7 +53,7 @@ Matrix4x4::~Matrix4x4()
 {
 }
 
-Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs)
+Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs) const
 {
 	Matrix4x4 result;
 	const Matrix4x4& lhs = *this;
@@ -76,7 +76,7 @@ Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs)
 	return result;
 }
 
-Vector4 Matrix4x4::operator* (const Vector4& vector)
+Vector4 Matrix4x4::operator* (const Vector4& vector) const
 {
 	Vector4 result;
 	const Matrix4x4& lhs = *this;

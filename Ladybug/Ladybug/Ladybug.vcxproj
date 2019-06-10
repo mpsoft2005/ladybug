@@ -123,6 +123,7 @@
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Rasterizer.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />

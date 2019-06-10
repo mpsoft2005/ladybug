@@ -1,3 +1,6 @@
+
+#include <math.h>
+
 #include "Vector3.h"
 
 const Vector3 Vector3::zero(0, 0, 0);
@@ -25,4 +28,37 @@ Vector3::Vector3(float x, float y, float z)
 
 Vector3::~Vector3()
 {
+}
+
+Vector3& Vector3::operator=(const Vector3 &rhs)
+{
+	this->x = rhs.x;
+	this->y = rhs.y;
+	this->z = rhs.z;
+	return *this;
+}
+
+Vector3 Vector3::operator/(float d) const
+{
+	return Vector3(this->x / d, this->y / d, this->z / d);
+}
+
+Vector3 Vector3::normalized() const
+{
+	return Normalize(*this);
+}
+
+float Vector3::Magnitude(const Vector3& vector)
+{
+	return sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+}
+
+Vector3 Vector3::Normalize(const Vector3& value)
+{
+	float num = Magnitude(value);
+	if (num > 1E-05f)
+	{
+		return value / num;
+	}
+	return zero;
 }
