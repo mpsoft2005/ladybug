@@ -8,6 +8,7 @@
 #include "Matrix4x4.h"
 #include "Color.h"
 #include "Mesh.h"
+#include "Bitmap.h"
 #include "Test.h"
 
 const float kEpsilon = 1e-8f;
@@ -52,6 +53,13 @@ struct Triangle
 	Vector3 v0;
 	Vector3 v1;
 	Vector3 v2;
+
+	Triangle(const Vector3& v0, const Vector3& v1, const Vector3& v2)
+	{
+		this->v0 = v0;
+		this->v1 = v1;
+		this->v2 = v2;
+	}
 };
 
 struct RaycastHit
@@ -112,6 +120,8 @@ bool Raycast(const Ray& ray, const Triangle& tri, RaycastHit &hitInfo)
 	return true;
 }
 
+// Returns a ray going from camera through a screen point.
+// Note: ray in camera space
 Ray ScreenPointToRay(int x, int y)
 {
 	float viewportX = (float)x / screenWidth;
@@ -138,18 +148,6 @@ void test_PrintRay(const Ray& ray)
 
 void test_Raytracing()
 {
-	Ray ray;
-	ray = ScreenPointToRay(0, 0);
-	test_PrintRay(ray);
-
-	ray = ScreenPointToRay(100, 100);
-	test_PrintRay(ray);
-
-	ray = ScreenPointToRay(640, 480);
-	test_PrintRay(ray);
-
-	return;
-
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
 	float *depthBuffer = new float[screenWidth * screenHeight];
 
@@ -168,9 +166,38 @@ void test_Raytracing()
 
 	for (int y = 0; y < screenHeight; y++) {
 		for (int x = 0; x < screenWidth; x++) {
+			Ray ray = ScreenPointToRay(x, y);
+			RaycastHit hitInfo;
+			for (int i = 0; i < numTris; i++) {
+				const Vector3& v0 = mesh->vertices[mesh->triangles[i * 3]];
+				const Vector3& v1 = mesh->vertices[mesh->triangles[i * 3 + 1]];
+				const Vector3& v2 = mesh->vertices[mesh->triangles[i * 3 + 2]];
 
+				Triangle tri(mvMatrix.MultiplyPoint(v0), mvMatrix.MultiplyPoint(v1), mvMatrix.MultiplyPoint(v2));
+				if (Raycast(ray, tri, hitInfo)) {
+					int idx = y * screenWidth + x;
+					if (depthBuffer[idx] > hitInfo.distance)
+					{
+						depthBuffer[idx] = hitInfo.distance;
+						frameBuffer[idx].r = 89 / 255.0f;
+						frameBuffer[idx].g = 89 / 255.0f;
+						frameBuffer[idx].b = 89 / 255.0f;
+					}
+				}
+			}
 		}
 	}
+
+	Bitmap bitmap(screenWidth, screenHeight);
+	for (int y = 0; y < screenHeight; y++)
+	{
+		for (int x = 0; x < screenWidth; x++)
+		{
+			const Color& pixel = frameBuffer[y * screenWidth + x];
+			bitmap.SetPixel(x, y, pixel);
+		}
+	}
+	bitmap.Save("./test_Raytracing.bmp");
 
 	delete mesh;
 	delete[] depthBuffer;
