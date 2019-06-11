@@ -165,7 +165,7 @@ void test_Raytracing()
 		for (int x = 0; x < screenWidth; x++) {
 			Ray ray = PrimaryRay(x + 0.5f, y + 0.5f);
 			RaycastHit hitInfo;
-			for (int i = 0; i < numTris; i++) {
+			for (size_t i = 0; i < numTris; i++) {
 				const Vector3& v0 = mesh->vertices[mesh->triangles[i * 3]];
 				const Vector3& v1 = mesh->vertices[mesh->triangles[i * 3 + 1]];
 				const Vector3& v2 = mesh->vertices[mesh->triangles[i * 3 + 2]];

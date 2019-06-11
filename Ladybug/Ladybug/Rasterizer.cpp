@@ -85,7 +85,7 @@ void test_Raster()
 	Mesh* mesh = test_CreatePlaneMesh();
 	size_t numTris = mesh->triangles.size() / 3;
 
-	for (int i = 0; i < numTris; ++i) {
+	for (size_t i = 0; i < numTris; ++i) {
 		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
 		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
 		const Vector3& v2World = mesh->vertices[mesh->triangles[i * 3 + 2]];
@@ -139,7 +139,7 @@ void test_Rasterization()
 	Mesh* mesh = test_CreatePlaneMesh();
 	size_t numTris = mesh->triangles.size() / 3;
 
-	for (int i = 0; i < numTris; ++i)
+	for (size_t i = 0; i < numTris; ++i)
 	{
 		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
 		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
