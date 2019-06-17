@@ -122,6 +122,17 @@ inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
+inline bool isOnEdge(float w0, float w1, float w2)
+{
+	if (fabs(w0) < 1e-02f)
+		return true;
+	if (fabs(w1) < 1e-02f)
+		return true;
+	if (fabs(w2) < 1e-02f)
+		return true;
+	return false;
+}
+
 void test_Rasterization()
 {
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
@@ -188,9 +199,18 @@ void test_Rasterization()
 						if (depthBuffer[idx] > z)
 						{
 							depthBuffer[idx] = z;
-							frameBuffer[idx].r = 89 / 255.0f;
-							frameBuffer[idx].g = 89 / 255.0f;
-							frameBuffer[idx].b = 89 / 255.0f;
+							if (isOnEdge(w0, w1, w2))
+							{
+								frameBuffer[idx].r = 18 / 255.0f;
+								frameBuffer[idx].g = 18 / 255.0f;
+								frameBuffer[idx].b = 18 / 255.0f;
+							}
+							else
+							{
+								frameBuffer[idx].r = 89 / 255.0f;
+								frameBuffer[idx].g = 89 / 255.0f;
+								frameBuffer[idx].b = 89 / 255.0f;
+							}
 						}
 					}
 				}
