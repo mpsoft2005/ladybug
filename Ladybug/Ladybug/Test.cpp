@@ -30,6 +30,71 @@ Mesh* test_CreatePlaneMesh()
 	return mesh;
 }
 
+Mesh* test_CreateCubeMesh()
+{
+	Mesh* mesh = new Mesh();
+
+	mesh->vertices.push_back(Vector3());
+	mesh->vertices.push_back(Vector3(-1.000000f, 0.000000f, 1.000000f));
+	mesh->vertices.push_back(Vector3(-1.000000f, 0.000000f, - 1.000000f));
+	mesh->vertices.push_back(Vector3(1.000000f, 0.000000f, - 1.000000f));
+	mesh->vertices.push_back(Vector3(1.000000f, 0.000000f, 1.000000f));
+	mesh->vertices.push_back(Vector3(-1.000000f, 2.000000f, 0.999999f));
+	mesh->vertices.push_back(Vector3(-0.999999f, 2.000000f, - 1.000001f));
+	mesh->vertices.push_back(Vector3(1.000000f, 2.000000f, - 1.000000f));
+	mesh->vertices.push_back(Vector3(1.000000f, 2.000000f, 1.000000f));
+
+	mesh->triangles.push_back(2);
+	mesh->triangles.push_back(4);
+	mesh->triangles.push_back(1);
+
+	mesh->triangles.push_back(8);
+	mesh->triangles.push_back(6);
+	mesh->triangles.push_back(5);
+
+	mesh->triangles.push_back(5);
+	mesh->triangles.push_back(2);
+	mesh->triangles.push_back(1);
+
+	mesh->triangles.push_back(6);
+	mesh->triangles.push_back(3);
+	mesh->triangles.push_back(2);
+
+	mesh->triangles.push_back(3);
+	mesh->triangles.push_back(8);
+	mesh->triangles.push_back(4);
+
+	mesh->triangles.push_back(1);
+	mesh->triangles.push_back(8);
+	mesh->triangles.push_back(5);
+
+	mesh->triangles.push_back(2);
+	mesh->triangles.push_back(3);
+	mesh->triangles.push_back(4);
+
+	mesh->triangles.push_back(8);
+	mesh->triangles.push_back(7);
+	mesh->triangles.push_back(6);
+
+	mesh->triangles.push_back(5);
+	mesh->triangles.push_back(6);
+	mesh->triangles.push_back(2);
+
+	mesh->triangles.push_back(6);
+	mesh->triangles.push_back(7);
+	mesh->triangles.push_back(3);
+
+	mesh->triangles.push_back(3);
+	mesh->triangles.push_back(7);
+	mesh->triangles.push_back(8);
+
+	mesh->triangles.push_back(1);
+	mesh->triangles.push_back(4);
+	mesh->triangles.push_back(8);
+
+	return mesh;
+}
+
 void test_PrintVector3(const Vector3& v)
 {
 	printf("  %.5f %.5f %.5f\n", v.x, v.y, v.z);

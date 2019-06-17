@@ -6,6 +6,7 @@
 #include "Mesh.h"
 
 Mesh* test_CreatePlaneMesh();
+Mesh* test_CreateCubeMesh();
 
 void test_PrintVector3(const Vector3& v);
 void test_PrintMatrix(const Matrix4x4& M);

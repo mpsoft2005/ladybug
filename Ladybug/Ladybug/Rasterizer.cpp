@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <algorithm>
+#include <vector>
 
 #include "Rasterizer.h"
 
@@ -136,53 +137,61 @@ void test_Rasterization()
 		depthBuffer[i] = farClipping;
 	}
 
-	Mesh* mesh = test_CreatePlaneMesh();
-	size_t numTris = mesh->triangles.size() / 3;
+	std::vector<Mesh*> meshs;
 
-	for (size_t i = 0; i < numTris; ++i)
+	meshs.push_back(test_CreatePlaneMesh());
+	meshs.push_back(test_CreateCubeMesh());
+
+	for (size_t i = 0; i < meshs.size(); i++)
 	{
-		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
-		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
-		const Vector3& v2World = mesh->vertices[mesh->triangles[i * 3 + 2]];
+		Mesh* mesh = meshs[i];
+		size_t numTris = mesh->triangles.size() / 3;
 
-		Vector3 v0Raster = WorldToScreenPoint(v0World);
-		Vector3 v1Raster = WorldToScreenPoint(v1World);
-		Vector3 v2Raster = WorldToScreenPoint(v2World);
-
-		float area = edgeFunction(v0Raster, v1Raster, v2Raster);
-
-		float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
-		float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
-		float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
-		float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
-
-		int x0 = std::max(0, (int)(std::roundf(xmin)));
-		int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
-		int y0 = std::max(0, (int)(std::roundf(ymin)));
-		int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
-
-		for (int y = y0; y <= y1; y++)
+		for (size_t idx = 0; idx < numTris; ++idx)
 		{
-			for (int x = x0; x <= x1; x++)
+			const Vector3& v0World = mesh->vertices[mesh->triangles[idx * 3]];
+			const Vector3& v1World = mesh->vertices[mesh->triangles[idx * 3 + 1]];
+			const Vector3& v2World = mesh->vertices[mesh->triangles[idx * 3 + 2]];
+
+			Vector3 v0Raster = WorldToScreenPoint(v0World);
+			Vector3 v1Raster = WorldToScreenPoint(v1World);
+			Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+
+			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+
+			int x0 = std::max(0, (int)(std::roundf(xmin)));
+			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
+			int y0 = std::max(0, (int)(std::roundf(ymin)));
+			int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
+
+			for (int y = y0; y <= y1; y++)
 			{
-				Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
-				float w0 = edgeFunction(v0Raster, v1Raster, pixelSample);
-				float w1 = edgeFunction(v1Raster, v2Raster, pixelSample);
-				float w2 = edgeFunction(v2Raster, v0Raster, pixelSample);
-
-				if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+				for (int x = x0; x <= x1; x++)
 				{
-					w0 /= area; w1 /= area; w2 /= area;
-					float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
-					float z = 1 / oneOverZ;
+					Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
+					float w0 = edgeFunction(v0Raster, v1Raster, pixelSample);
+					float w1 = edgeFunction(v1Raster, v2Raster, pixelSample);
+					float w2 = edgeFunction(v2Raster, v0Raster, pixelSample);
 
-					int idx = y * screenWidth + x;
-					if (depthBuffer[idx] > z)
+					if (w0 >= 0 && w1 >= 0 && w2 >= 0)
 					{
-						depthBuffer[idx] = z;
-						frameBuffer[idx].r = 89 / 255.0f;
-						frameBuffer[idx].g = 89 / 255.0f;
-						frameBuffer[idx].b = 89 / 255.0f;
+						w0 /= area; w1 /= area; w2 /= area;
+						float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+						float z = 1 / oneOverZ;
+
+						int idx = y * screenWidth + x;
+						if (depthBuffer[idx] > z)
+						{
+							depthBuffer[idx] = z;
+							frameBuffer[idx].r = 89 / 255.0f;
+							frameBuffer[idx].g = 89 / 255.0f;
+							frameBuffer[idx].b = 89 / 255.0f;
+						}
 					}
 				}
 			}
@@ -200,7 +209,10 @@ void test_Rasterization()
 	}
 	bitmap.Save("./test_Rasterization.bmp");
 
-	delete mesh;
+	for (size_t i = 0; i < meshs.size(); i++)
+	{
+		delete meshs[i];
+	}
 	delete[] frameBuffer;
 	delete[] depthBuffer;
 }
