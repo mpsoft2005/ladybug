@@ -229,6 +229,37 @@ void test_Rasterization()
 	}
 	bitmap.Save("./test_Rasterization.bmp");
 
+
+
+	std::ofstream ofs;
+	ofs.open("./test_Rasterization.svg");
+	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
+	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(200, 200, 200); stroke - width:1; stroke:rgb(18, 18, 18)\" />";
+
+	for (size_t i = 0; i < meshs.size(); i++)
+	{
+		Mesh* mesh = meshs[i];
+		size_t numTris = mesh->triangles.size() / 3;
+
+		for (size_t idx = 0; idx < numTris; ++idx) {
+			const Vector3& v0World = mesh->vertices[mesh->triangles[idx * 3]];
+			const Vector3& v1World = mesh->vertices[mesh->triangles[idx * 3 + 1]];
+			const Vector3& v2World = mesh->vertices[mesh->triangles[idx * 3 + 2]];
+
+			Vector3 v0Raster = WorldToScreenPoint(v0World);
+			Vector3 v1Raster = WorldToScreenPoint(v1World);
+			Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+			ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << screenHeight - (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << screenHeight - (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+			ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << screenHeight - (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << screenHeight - (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+			ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << screenHeight - (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << screenHeight - (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		}
+	}
+
+	ofs << "</svg>\n";
+	ofs.close();
+
+
 	for (size_t i = 0; i < meshs.size(); i++)
 	{
 		delete meshs[i];
