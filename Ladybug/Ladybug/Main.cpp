@@ -7,6 +7,7 @@
 #include "Matrix4x4.h"
 
 #include "Test.h"
+#include "ObjLoader.h"
 #include "Rasterizer.h"
 #include "Raytracing.h"
 
@@ -15,7 +16,6 @@ int main()
 	printf("Welcome to Ladybug Engine!\n");
 
 	test_Rasterization();
-	test_Raytracing();
 
 	return 0;
 }
