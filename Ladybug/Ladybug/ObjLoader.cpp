@@ -1,5 +1,7 @@
 
 #include <vector>
+#include <map>
+#include <assert.h>
 
 #include "ObjLoader.h"
 
@@ -8,6 +10,26 @@ struct Vertex
 	int v;
 	int vt;
 	int vn;
+
+	bool operator < (const Vertex& rhs)  const
+	{
+		if (v < rhs.v)
+			return true;
+		if (v > rhs.v)
+			return false;
+
+		if (vt < rhs.vt)
+			return true;
+		if (vt > rhs.vt)
+			return false;
+
+		if (vn < rhs.vn)
+			return true;
+		if (vn > rhs.vn)
+			return false;
+
+		return false;
+	}
 };
 
 ObjLoader::ObjLoader()
@@ -132,20 +154,40 @@ Mesh* ObjLoader::Load(const char* filename)
 		}
 	}
 
-	for (int i = 0; i < (int)vertices.size(); i++)
-	{
-		mesh->vertices.push_back(vertices[i]);
-	}
+	std::map<Vertex, int> vert2idx;
+	std::map<Vertex, int>::iterator it;
 
-	int numTris = (int)triangles.size() / 3;
-	for (int i = 0; i < numTris; i++)
+	for (int i = 0; i < (int)triangles.size(); i++)
 	{
-		const Vertex& v0 = triangles[i * 3];
-		const Vertex& v1 = triangles[i * 3 + 1];
-		const Vertex& v2 = triangles[i * 3 + 2];
-		mesh->triangles.push_back(v0.v - 1);
-		mesh->triangles.push_back(v1.v - 1);
-		mesh->triangles.push_back(v2.v - 1);
+		const Vertex& vert = triangles[i];
+		it = vert2idx.find(vert);
+		int idx;
+
+		if (it == vert2idx.end())
+		{
+			assert(vert.v > 0);
+			idx = (int)mesh->vertices.size();
+			mesh->vertices.push_back(vertices[vert.v - 1]);
+
+			if (vert.vt > 0)
+			{
+				mesh->uv.push_back(uv[vert.vt - 1]);
+				assert(mesh->uv.size() == mesh->vertices.size());
+			}
+
+			if (vert.vn > 0)
+			{
+				mesh->normals.push_back(normals[vert.vn - 1]);
+				assert(mesh->normals.size() == mesh->vertices.size());
+			}
+
+			vert2idx[vert] = idx;
+		}
+		else
+		{
+			idx = it->second;
+		}
+		mesh->triangles.push_back(idx);
 	}
 
 	return mesh;
