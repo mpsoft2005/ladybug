@@ -141,6 +141,7 @@ void test_Rasterization()
 	std::vector<Mesh*> meshs;
 
 	meshs.push_back(ObjLoader::Load("plane_1.obj"));
+	meshs.push_back(ObjLoader::Load("plane_2.obj"));
 	meshs.push_back(ObjLoader::Load("cube_1.obj"));
 
 	for (size_t i = 0; i < meshs.size(); i++)

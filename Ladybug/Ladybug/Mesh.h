@@ -18,4 +18,6 @@ public:
 public:
 	Mesh();
 	~Mesh();
+
+	void Debug();
 };

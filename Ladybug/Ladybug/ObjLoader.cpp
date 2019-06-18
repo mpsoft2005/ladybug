@@ -91,6 +91,12 @@ void DebugTri(const Vertex& v0, const Vertex& v1, const Vertex& v2)
 	printf("\n");
 }
 
+// Right-handed to Left-handed Coordinate
+inline Vector3 Convert(const Vector3& v)
+{
+	return Vector3(-v.x, v.y, v.z);
+}
+
 Mesh* ObjLoader::Load(const char* filename)
 {
 	FILE * file = fopen(filename, "r");
@@ -157,37 +163,43 @@ Mesh* ObjLoader::Load(const char* filename)
 	std::map<Vertex, int> vert2idx;
 	std::map<Vertex, int>::iterator it;
 
-	for (int i = 0; i < (int)triangles.size(); i++)
+	int numTris = (int)triangles.size() / 3;
+	for (int i = 0; i < numTris; i++)
 	{
-		const Vertex& vert = triangles[i];
-		it = vert2idx.find(vert);
-		int idx;
-
-		if (it == vert2idx.end())
+		int idx[3];
+		for (int k = 0; k < 3; k++)
 		{
-			assert(vert.v > 0);
-			idx = (int)mesh->vertices.size();
-			mesh->vertices.push_back(vertices[vert.v - 1]);
+			const Vertex& vert = triangles[i * 3 + k];
+			it = vert2idx.find(vert);
 
-			if (vert.vt > 0)
+			if (it == vert2idx.end())
 			{
-				mesh->uv.push_back(uv[vert.vt - 1]);
-				assert(mesh->uv.size() == mesh->vertices.size());
-			}
+				assert(vert.v > 0);
+				idx[k] = (int)mesh->vertices.size();
+				mesh->vertices.push_back(Convert(vertices[vert.v - 1]));
 
-			if (vert.vn > 0)
+				if (vert.vt > 0)
+				{
+					mesh->uv.push_back(uv[vert.vt - 1]);
+					assert(mesh->uv.size() == mesh->vertices.size());
+				}
+
+				if (vert.vn > 0)
+				{
+					mesh->normals.push_back(Convert(normals[vert.vn - 1]));
+					assert(mesh->normals.size() == mesh->vertices.size());
+				}
+
+				vert2idx[vert] = idx[k];
+			}
+			else
 			{
-				mesh->normals.push_back(normals[vert.vn - 1]);
-				assert(mesh->normals.size() == mesh->vertices.size());
+				idx[k] = it->second;
 			}
-
-			vert2idx[vert] = idx;
 		}
-		else
-		{
-			idx = it->second;
-		}
-		mesh->triangles.push_back(idx);
+		mesh->triangles.push_back(idx[0]);
+		mesh->triangles.push_back(idx[2]);
+		mesh->triangles.push_back(idx[1]);
 	}
 
 	return mesh;
