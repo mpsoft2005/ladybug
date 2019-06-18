@@ -5,6 +5,8 @@ using UnityEngine;
 public class CustomRotation : MonoBehaviour
 {
     public Transform lookAtTarget;
+    public Light light;
+    public MeshFilter meshFilter;
 
     void PrintVector3(Vector3 v)
     {
@@ -35,6 +37,41 @@ public class CustomRotation : MonoBehaviour
         TestRay(0, 0);
         TestRay(100, 100);
         TestRay(640, 480);
+
+        Debug.Log("Light dir(world space):");
+        PrintVector3(light.transform.forward);
+
+        Mesh mesh = meshFilter.mesh;
+        Debug.Log("mesh.vertices.Length=" + mesh.vertices.Length);
+        Debug.Log("mesh.normals.Length=" + mesh.normals.Length);
+        Debug.Log("mesh.triangles.Length=" + mesh.triangles.Length);
+        Debug.Log("mesh.uv.Length=" + mesh.uv.Length);
+
+        for (int i = 0; i < mesh.vertices.Length; i++)
+        {
+            Vector3 v = mesh.vertices[i];
+            Debug.LogFormat("v {0} {1} {2}", v.x, v.y, v.z);
+        }
+
+        for (int i = 0; i < mesh.uv.Length; i++)
+        {
+            Vector2 vt = mesh.uv[i];
+            Debug.LogFormat("vt {0} {1}", vt.x, vt.y);
+        }
+
+        for (int i = 0; i < mesh.normals.Length; i++)
+        {
+            Vector3 vn = mesh.normals[i];
+            Debug.LogFormat("vn {0} {1} {2}", vn.x, vn.y, vn.z);
+        }
+
+        for (int i = 0; i < mesh.triangles.Length / 3; i++)
+        {
+            int i0 = i * 3;
+            int i1 = i * 3 + 1;
+            int i2 = i * 3 + 2;
+            Debug.LogFormat("tri {0} {1} {2}", mesh.triangles[i0], mesh.triangles[i1], mesh.triangles[i2]);
+        }
     }
 
     void TestRay(int x, int y)
