@@ -147,7 +147,7 @@ void test_Rasterization()
 	light.intensity = 1;
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
 
-	Color ambient(0.212f, 0.227f, 0.259f); // ambient color
+	Color ambient(0, 0, 0); // ambient color
 
 	// setup game objects
 	GameObject* object;
@@ -217,7 +217,7 @@ void test_Rasterization()
 						{
 							depthBuffer[idx] = z;
 							Vector3 N = mesh->normals[i0];
-							Color diffuse = material->albedo / (float)M_PI * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
+							Color diffuse = material->albedo * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
 							frameBuffer[idx] = diffuse + ambient;
 						}
 					}
