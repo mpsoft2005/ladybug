@@ -15,6 +15,7 @@
 #include "Material.h"
 #include "GameObject.h"
 #include "Test.h"
+#include "SVG.h"
 #include "ObjLoader.h"
 #include "DirectionalLight.h"
 
@@ -82,10 +83,8 @@ void test_Raster()
 	test_PrintVector3(screenPoint);
 
 
-	std::ofstream ofs;
-	ofs.open("./Plane.svg");
-	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
-	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(0, 0, 255); stroke - width:3; stroke:rgb(0, 0, 0)\" />";
+	SVG svg(screenWidth, screenHeight);
+	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(0, 0, 0), 1, Color32(0, 0, 255));
 
 	Mesh* mesh = test_CreatePlaneMesh();
 	size_t numTris = mesh->triangles.size() / 3;
@@ -99,14 +98,11 @@ void test_Raster()
 		Vector3 v1Raster = WorldToScreenPoint(v1World);
 		Vector3 v2Raster = WorldToScreenPoint(v2World);
 
-		ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << screenHeight - (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << screenHeight - (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-		ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << screenHeight - (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << screenHeight - (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-		ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << screenHeight - (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << screenHeight - (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+		svg.DrawLine(v0Raster.x, screenHeight - v0Raster.y, v1Raster.x, screenHeight - v1Raster.y, Color32(0, 0, 0), 1);
+		svg.DrawLine(v1Raster.x, screenHeight - v1Raster.y, v2Raster.x, screenHeight - v2Raster.y, Color32(0, 0, 0), 1);
+		svg.DrawLine(v2Raster.x, screenHeight - v2Raster.y, v0Raster.x, screenHeight - v0Raster.y, Color32(0, 0, 0), 1);
 	}
-
-
-	ofs << "</svg>\n";
-	ofs.close();
+	svg.Save("./test_Raster.svg");
 
 	delete mesh;
 }
@@ -238,11 +234,8 @@ void test_Rasterization()
 	bitmap.Save("./test_Rasterization.bmp");
 
 
-
-	std::ofstream ofs;
-	ofs.open("./test_Rasterization.svg");
-	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
-	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(200, 200, 200); stroke - width:1; stroke:rgb(18, 18, 18)\" />";
+	SVG svg(screenWidth, screenHeight);
+	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(18, 18, 18), 1, Color32(200, 200, 200));
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
@@ -258,15 +251,12 @@ void test_Rasterization()
 			Vector3 v1Raster = WorldToScreenPoint(v1World);
 			Vector3 v2Raster = WorldToScreenPoint(v2World);
 
-			ofs << "<line x1=\"" << (int)v0Raster.x << "\" y1=\"" << screenHeight - (int)v0Raster.y << "\" x2=\"" << (int)v1Raster.x << "\" y2=\"" << screenHeight - (int)v1Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-			ofs << "<line x1=\"" << (int)v1Raster.x << "\" y1=\"" << screenHeight - (int)v1Raster.y << "\" x2=\"" << (int)v2Raster.x << "\" y2=\"" << screenHeight - (int)v2Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
-			ofs << "<line x1=\"" << (int)v2Raster.x << "\" y1=\"" << screenHeight - (int)v2Raster.y << "\" x2=\"" << (int)v0Raster.x << "\" y2=\"" << screenHeight - (int)v0Raster.y << "\" style=\"stroke:rgb(0,0,0);stroke-width:1\" />\n";
+			svg.DrawLine(v0Raster.x, screenHeight - v0Raster.y, v1Raster.x, screenHeight - v1Raster.y, Color32(0, 0, 0), 1);
+			svg.DrawLine(v1Raster.x, screenHeight - v1Raster.y, v2Raster.x, screenHeight - v2Raster.y, Color32(0, 0, 0), 1);
+			svg.DrawLine(v2Raster.x, screenHeight - v2Raster.y, v0Raster.x, screenHeight - v0Raster.y, Color32(0, 0, 0), 1);
 		}
 	}
-
-	ofs << "</svg>\n";
-	ofs.close();
-
+	svg.Save("./test_Rasterization.svg");
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

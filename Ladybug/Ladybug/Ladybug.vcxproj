@@ -129,6 +129,7 @@
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Raytracing.h" />
+    <ClInclude Include="SVG.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Raytracing.cpp" />
+    <ClCompile Include="SVG.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
