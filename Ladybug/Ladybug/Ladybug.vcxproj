@@ -120,6 +120,9 @@
     <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Color32.h" />
+    <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjLoader.h" />
@@ -135,7 +138,10 @@
     <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Color32.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjLoader.cpp" />

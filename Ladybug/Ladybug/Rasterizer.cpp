@@ -12,8 +12,11 @@
 #include "Bitmap.h"
 #include "Color.h"
 #include "Mesh.h"
+#include "Material.h"
+#include "GameObject.h"
 #include "Test.h"
 #include "ObjLoader.h"
+#include "DirectionalLight.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
 
@@ -138,15 +141,24 @@ void test_Rasterization()
 		depthBuffer[i] = farClipping;
 	}
 
-	std::vector<Mesh*> meshs;
+	GameObject* object;
+	std::vector<GameObject*> gameObjects;
 
-	meshs.push_back(ObjLoader::Load("plane_1.obj"));
-	meshs.push_back(ObjLoader::Load("plane_2.obj"));
-	meshs.push_back(ObjLoader::Load("cube_1.obj"));
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("plane_1.obj");
+	object->material = new Material();
+	object->material->albedo = Color(19 / 255.f, 1, 0);
+	gameObjects.push_back(object);
 
-	for (size_t i = 0; i < meshs.size(); i++)
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("cube_1.obj");
+	object->material = new Material();
+	object->material->albedo = Color(1, 1, 1);
+	gameObjects.push_back(object);
+
+	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = meshs[i];
+		Mesh* mesh = gameObjects[i]->mesh;
 		size_t numTris = mesh->triangles.size() / 3;
 
 		for (size_t idx = 0; idx < numTris; ++idx)
@@ -218,9 +230,9 @@ void test_Rasterization()
 	ofs << "<svg version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" width=\"" << screenWidth << "\" height=\"" << screenHeight << "\">" << std::endl;
 	ofs << "<rect width=\"" << screenWidth << "\" height=\"" << screenHeight << "\" style=\"fill:rgb(200, 200, 200); stroke - width:1; stroke:rgb(18, 18, 18)\" />";
 
-	for (size_t i = 0; i < meshs.size(); i++)
+	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = meshs[i];
+		Mesh* mesh = gameObjects[i]->mesh;
 		size_t numTris = mesh->triangles.size() / 3;
 
 		for (size_t idx = 0; idx < numTris; ++idx) {
@@ -242,9 +254,9 @@ void test_Rasterization()
 	ofs.close();
 
 
-	for (size_t i = 0; i < meshs.size(); i++)
+	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		delete meshs[i];
+		delete gameObjects[i];
 	}
 	delete[] frameBuffer;
 	delete[] depthBuffer;
