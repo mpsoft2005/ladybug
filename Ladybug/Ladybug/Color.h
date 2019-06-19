@@ -12,5 +12,10 @@ public:
 	Color(float r, float g, float b, float a);
 	Color(float r, float g, float b);
 	~Color();
+
+	Color operator+(const Color& b) const;
+	Color operator*(float b) const;
+	Color operator*(const Color& b) const;
+	Color operator/(float b) const;
 };
 

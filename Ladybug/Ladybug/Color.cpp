@@ -27,3 +27,23 @@ Color::Color(float r, float g, float b)
 Color::~Color()
 {
 }
+
+Color Color::operator+(const Color& b) const
+{
+	return Color(this->r + b.r, this->g + b.g, this->b + b.b, this->a + b.a);
+}
+
+Color Color::operator*(float b) const
+{
+	return Color(this->r * b, this->g * b, this->b * b, this->a * b);
+}
+
+Color Color::operator*(const Color& b) const
+{
+	return Color(this->r * b.r, this->g * b.g, this->b * b.b, this->a * b.a);
+}
+
+Color Color::operator/(float b) const
+{
+	return Color(this->r / b, this->g / b, this->b / b, this->a / b);
+}

@@ -141,6 +141,15 @@ void test_Rasterization()
 		depthBuffer[i] = farClipping;
 	}
 
+	// setup lights
+	DirectionalLight light;
+	light.color = Color(1, 244 / 255.f, 214 / 255.f);
+	light.intensity = 1;
+	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
+
+	Color ambient(0.212f, 0.227f, 0.259f); // ambient color
+
+	// setup game objects
 	GameObject* object;
 	std::vector<GameObject*> gameObjects;
 
@@ -159,13 +168,18 @@ void test_Rasterization()
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
 		Mesh* mesh = gameObjects[i]->mesh;
+		Material* material = gameObjects[i]->material;
 		size_t numTris = mesh->triangles.size() / 3;
 
 		for (size_t idx = 0; idx < numTris; ++idx)
 		{
-			const Vector3& v0World = mesh->vertices[mesh->triangles[idx * 3]];
-			const Vector3& v1World = mesh->vertices[mesh->triangles[idx * 3 + 1]];
-			const Vector3& v2World = mesh->vertices[mesh->triangles[idx * 3 + 2]];
+			int i0 = mesh->triangles[idx * 3];
+			int i1 = mesh->triangles[idx * 3 + 1];
+			int i2 = mesh->triangles[idx * 3 + 2];
+
+			const Vector3& v0World = mesh->vertices[i0];
+			const Vector3& v1World = mesh->vertices[i1];
+			const Vector3& v2World = mesh->vertices[i2];
 
 			Vector3 v0Raster = WorldToScreenPoint(v0World);
 			Vector3 v1Raster = WorldToScreenPoint(v1World);
@@ -202,9 +216,9 @@ void test_Rasterization()
 						if (depthBuffer[idx] > z)
 						{
 							depthBuffer[idx] = z;
-							frameBuffer[idx].r = 89 / 255.0f;
-							frameBuffer[idx].g = 89 / 255.0f;
-							frameBuffer[idx].b = 89 / 255.0f;
+							Vector3 N = mesh->normals[i0];
+							Color diffuse = material->albedo / (float)M_PI * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
+							frameBuffer[idx] = diffuse + ambient;
 						}
 					}
 				}
