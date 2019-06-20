@@ -97,6 +97,11 @@ inline Vector3 Convert(const Vector3& v)
 	return Vector3(-v.x, v.y, v.z);
 }
 
+inline Vector3 ConvertNormal(const Vector3& n)
+{
+	return Vector3(-n.x, n.y, n.z).normalized();
+}
+
 Mesh* ObjLoader::Load(const char* filename)
 {
 	FILE * file = fopen(filename, "r");
@@ -186,7 +191,7 @@ Mesh* ObjLoader::Load(const char* filename)
 
 				if (vert.vn > 0)
 				{
-					mesh->normals.push_back(Convert(normals[vert.vn - 1]));
+					mesh->normals.push_back(ConvertNormal(normals[vert.vn - 1]));
 					assert(mesh->normals.size() == mesh->vertices.size());
 				}
 
