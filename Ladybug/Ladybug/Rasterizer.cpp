@@ -122,6 +122,23 @@ inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
+void OutputBitmap(Color *frameBuffer, int frameIdx)
+{
+	Bitmap bitmap(screenWidth, screenHeight);
+	for (int y = 0; y < screenHeight; y++)
+	{
+		for (int x = 0; x < screenWidth; x++)
+		{
+			const Color& pixel = frameBuffer[y * screenWidth + x];
+			bitmap.SetPixel(x, y, pixel);
+		}
+	}
+
+	static char filename[256];
+	sprintf(filename, "./test_Rasterization_%d.bmp", frameIdx);
+	bitmap.Save(filename);
+}
+
 void test_Rasterization()
 {
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
@@ -164,7 +181,7 @@ void test_Rasterization()
 	object->mesh->Debug();
 
 	object = new GameObject();
-	object->mesh = ObjLoader::Load("cube_1.obj");
+	object->mesh = ObjLoader::Load("special-cube.obj");
 	object->material = new Material();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
@@ -174,6 +191,15 @@ void test_Rasterization()
 		Mesh* mesh = gameObjects[i]->mesh;
 		Material* material = gameObjects[i]->material;
 		size_t numTris = mesh->triangles.size() / 3;
+
+		// OpenGL Rasterization Algorithm
+		// https://en.wikibooks.org/wiki/GLSL_Programming/Rasterization
+
+		// Mesa 3D Rasterizer
+		// https://github.com/anholt/mesa/blob/master/src/gallium/docs/source/cso/rasterizer.rst
+
+		// Triangle rasterization in practice
+		// https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 
 		for (size_t idx = 0; idx < numTris; ++idx)
 		{
@@ -206,15 +232,14 @@ void test_Rasterization()
 				for (int x = x0; x <= x1; x++)
 				{
 					Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
-					float w0 = edgeFunction(v0Raster, v1Raster, pixelSample);
-					float w1 = edgeFunction(v1Raster, v2Raster, pixelSample);
-					float w2 = edgeFunction(v2Raster, v0Raster, pixelSample);
+					float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
+					float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
+					float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
 
 					if (w0 >= 0 && w1 >= 0 && w2 >= 0)
 					{
 						w0 /= area; w1 /= area; w2 /= area;
-						float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
-						float z = 1 / oneOverZ;
+						float z = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
 
 						int idx = y * screenWidth + x;
 						if (depthBuffer[idx] > z)
@@ -230,17 +255,7 @@ void test_Rasterization()
 		}
 	}
 
-	Bitmap bitmap(screenWidth, screenHeight);
-	for (int y = 0; y < screenHeight; y++)
-	{
-		for (int x = 0; x < screenWidth; x++)
-		{
-			const Color& pixel = frameBuffer[y * screenWidth + x];
-			bitmap.SetPixel(x, y, pixel);
-		}
-	}
-	bitmap.Save("./test_Rasterization.bmp");
-
+	OutputBitmap(frameBuffer, 0);
 
 	SVG svg(screenWidth, screenHeight);
 	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(18, 18, 18), 1, Color32(200, 200, 200));
