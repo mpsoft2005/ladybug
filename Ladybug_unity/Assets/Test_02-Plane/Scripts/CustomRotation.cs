@@ -121,8 +121,9 @@ public class CustomRotation : MonoBehaviour
             texture.Apply();
             RenderTexture.active = oldTexture;
 
-            byte[] raw = texture.EncodeToJPG();
-            File.WriteAllBytes("mytest.jpg", raw);
+            Bitmap bitmap = new Bitmap(640, 480);
+            bitmap.SetPixels(texture.GetPixels32());
+            bitmap.Save("mytest.bmp");
         }
     }
 }

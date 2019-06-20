@@ -58,6 +58,14 @@ public class Bitmap
         buffer[y * width + x] = color;
     }
 
+    public void SetPixels(Color32[] pixels)
+    {
+        if (pixels.Length == buffer.Length)
+        {
+            buffer = pixels;
+        }
+    }
+
     private static byte[] GetBytes<T>(T data) where T : struct
     {
         int structSize = Marshal.SizeOf(typeof(T));

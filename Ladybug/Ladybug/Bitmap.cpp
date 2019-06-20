@@ -55,10 +55,10 @@ void Bitmap::SetPixel(int x, int y, const Color& color)
 	assert(x >= 0 && x < width);
 	assert(y >= 0 && y < height);
 	Color32& c = buffer[y * width + x];
-	c.r = (uint8_t)(color.r * 255);
-	c.g = (uint8_t)(color.g * 255);
-	c.b = (uint8_t)(color.b * 255);
-	c.a = (uint8_t)(color.a * 255);
+	c.r = (uint8_t)roundf(color.r * 255);
+	c.g = (uint8_t)roundf(color.g * 255);
+	c.b = (uint8_t)roundf(color.b * 255);
+	c.a = (uint8_t)roundf(color.a * 255);
 }
 
 void Bitmap::SetPixel(int x, int y, const Color32& color)
