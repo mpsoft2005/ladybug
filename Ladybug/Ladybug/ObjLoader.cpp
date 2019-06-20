@@ -166,10 +166,10 @@ Mesh* ObjLoader::Load(const char* filename)
 	int numTris = (int)triangles.size() / 3;
 	for (int i = 0; i < numTris; i++)
 	{
-		int idx[3];
+		int idx[3] = {0, 2, 1};
 		for (int k = 0; k < 3; k++)
 		{
-			const Vertex& vert = triangles[i * 3 + k];
+			const Vertex& vert = triangles[i * 3 + idx[k]];
 			it = vert2idx.find(vert);
 
 			if (it == vert2idx.end())
@@ -196,10 +196,8 @@ Mesh* ObjLoader::Load(const char* filename)
 			{
 				idx[k] = it->second;
 			}
+			mesh->triangles.push_back(idx[k]);
 		}
-		mesh->triangles.push_back(idx[0]);
-		mesh->triangles.push_back(idx[2]);
-		mesh->triangles.push_back(idx[1]);
 	}
 
 	return mesh;

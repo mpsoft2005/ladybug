@@ -20,4 +20,5 @@ public:
 	~Mesh();
 
 	void Debug();
+	void DebugTri();
 };

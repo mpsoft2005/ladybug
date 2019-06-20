@@ -156,6 +156,14 @@ void test_Rasterization()
 	gameObjects.push_back(object);
 
 	object = new GameObject();
+	object->mesh = ObjLoader::Load("ico-sphere_1-flat.obj");
+	object->material = new Material();
+	object->material->albedo = Color(1, 1, 1);
+	gameObjects.push_back(object);
+
+	object->mesh->Debug();
+
+	object = new GameObject();
 	object->mesh = ObjLoader::Load("cube_1.obj");
 	object->material = new Material();
 	object->material->albedo = Color(1, 1, 1);
