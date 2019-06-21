@@ -403,6 +403,8 @@ void test_Rasterization_Diffuse_sphere_smooth()
 							Vector3 N = N0 * w0 / v0Raster.z + N1 * w1 / v1Raster.z + N2 * w2 / v2Raster.z;
 							N = N / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
 
+							// Remember that an interpolated normal is typically not normalized?
+
 							Color diffuse = material->albedo * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
 							frameBuffer[idx] = diffuse + ambient;
 						}
@@ -413,30 +415,6 @@ void test_Rasterization_Diffuse_sphere_smooth()
 	}
 
 	OutputBitmap(frameBuffer, 0);
-
-	SVG svg(screenWidth, screenHeight);
-	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(18, 18, 18), 1, Color32(200, 200, 200));
-
-	for (size_t i = 0; i < gameObjects.size(); i++)
-	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		size_t numTris = mesh->triangles.size() / 3;
-
-		for (size_t idx = 0; idx < numTris; ++idx) {
-			const Vector3& v0World = mesh->vertices[mesh->triangles[idx * 3]];
-			const Vector3& v1World = mesh->vertices[mesh->triangles[idx * 3 + 1]];
-			const Vector3& v2World = mesh->vertices[mesh->triangles[idx * 3 + 2]];
-
-			Vector3 v0Raster = WorldToScreenPoint(v0World);
-			Vector3 v1Raster = WorldToScreenPoint(v1World);
-			Vector3 v2Raster = WorldToScreenPoint(v2World);
-
-			svg.DrawLine(v0Raster.x, screenHeight - v0Raster.y, v1Raster.x, screenHeight - v1Raster.y, Color32(0, 0, 0), 1);
-			svg.DrawLine(v1Raster.x, screenHeight - v1Raster.y, v2Raster.x, screenHeight - v2Raster.y, Color32(0, 0, 0), 1);
-			svg.DrawLine(v2Raster.x, screenHeight - v2Raster.y, v0Raster.x, screenHeight - v0Raster.y, Color32(0, 0, 0), 1);
-		}
-	}
-	svg.Save("./test_Rasterization.svg");
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
