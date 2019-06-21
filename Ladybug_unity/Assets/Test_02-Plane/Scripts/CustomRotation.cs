@@ -59,7 +59,7 @@ public class CustomRotation : MonoBehaviour
 
     private void Awake()
     {
-        FileStream stream = File.OpenWrite("ladybug.log");
+        FileStream stream = File.OpenWrite("ladybug_unity.log");
         streamWriter = new StreamWriter(stream);
     }
 
@@ -136,7 +136,7 @@ public class CustomRotation : MonoBehaviour
 
             Bitmap bitmap = new Bitmap(640, 480);
             bitmap.SetPixels(texture.GetPixels32());
-            bitmap.Save("mytest.bmp");
+            bitmap.Save("ladybug_unity.bmp");
         }
     }
 }
