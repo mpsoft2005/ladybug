@@ -410,6 +410,9 @@ void test_Rasterization_Diffuse_sphere_smooth()
 						{
 							depthBuffer[idx] = z;
 
+							// Transforming Normal Vectors
+							// https://en.wikibooks.org/wiki/GLSL_Programming/Applying_Matrix_Transformations
+
 							const Vector3& N0 = mesh->normals[i0];
 							const Vector3& N1 = mesh->normals[i1];
 							const Vector3& N2 = mesh->normals[i2];
