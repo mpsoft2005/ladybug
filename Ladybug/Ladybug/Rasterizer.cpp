@@ -403,7 +403,7 @@ void test_Rasterization_Diffuse_sphere_smooth()
 					if (overlaps)
 					{
 						w0 /= area; w1 /= area; w2 /= area;
-						float z = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+						float z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
 
 						int idx = y * screenWidth + x;
 						if (depthBuffer[idx] > z)
