@@ -117,6 +117,7 @@ inline float max(float a, float b, float c)
 	return std::max(a, std::max(b, c));
 }
 
+// calc signed area of parallelogram
 inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 {
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
@@ -365,6 +366,10 @@ void test_Rasterization_Diffuse_sphere_smooth()
 			Vector3 v1Raster = WorldToScreenPoint(v1World);
 			Vector3 v2Raster = WorldToScreenPoint(v2World);
 
+			Vector3 e0 = v2Raster - v1Raster;
+			Vector3 e1 = v0Raster - v2Raster;
+			Vector3 e2 = v1Raster - v0Raster;
+
 			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 
 			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
@@ -386,7 +391,16 @@ void test_Rasterization_Diffuse_sphere_smooth()
 					float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
 					float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
 
-					if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+					// Rasterization Rules: top-left rule
+					// inside the triangle or
+					//   1. lies on triangle top edge
+					//   2. lies on triangle left edge
+					bool overlaps = true;
+					overlaps &= (w0 == 0 ? ((e0.y == 0 && e0.x < 0) || e0.y < 0) : (w0 > 0));
+					overlaps &= (w1 == 0 ? ((e1.y == 0 && e1.x < 0) || e1.y < 0) : (w1 > 0));
+					overlaps &= (w1 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
+
+					if (overlaps)
 					{
 						w0 /= area; w1 /= area; w2 /= area;
 						float z = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
