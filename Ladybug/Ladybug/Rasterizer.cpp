@@ -421,6 +421,7 @@ void test_Rasterization_Diffuse_sphere_smooth()
 							N = N / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
 
 							// Remember that an interpolated normal is typically not normalized?
+							N = N.normalized();
 
 							Color diffuse = material->albedo * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
 							frameBuffer[idx] = diffuse + ambient;
