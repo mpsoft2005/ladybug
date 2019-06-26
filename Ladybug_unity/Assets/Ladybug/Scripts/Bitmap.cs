@@ -103,9 +103,6 @@ public class Bitmap
             bfh.reserved2 = 0;
             bfh.off_bits = (uint)(Marshal.SizeOf(bih) + Marshal.SizeOf(bfh));
 
-            Debug.LogFormat("Marshal.SizeOf(bfh)={0}", Marshal.SizeOf(bfh));
-            Debug.LogFormat("Marshal.SizeOf(bih)={0}", Marshal.SizeOf(bih));
-
             stream.Write(GetBytes(bfh), 0, Marshal.SizeOf(bfh));
             stream.Write(GetBytes(bih), 0, Marshal.SizeOf(bih));
 
