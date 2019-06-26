@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: diffuse-plane
-  m_Shader: {fileID: 4800000, guid: c56aeb23d68403b46939e540546470d5, type: 3}
+  m_Shader: {fileID: 4800000, guid: 02a0453c5fdf33144b9434baa0ce893a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
