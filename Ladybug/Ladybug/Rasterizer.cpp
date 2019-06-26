@@ -398,7 +398,7 @@ void test_Rasterization_Diffuse_sphere_smooth()
 					bool overlaps = true;
 					overlaps &= (w0 == 0 ? ((e0.y == 0 && e0.x < 0) || e0.y < 0) : (w0 > 0));
 					overlaps &= (w1 == 0 ? ((e1.y == 0 && e1.x < 0) || e1.y < 0) : (w1 > 0));
-					overlaps &= (w1 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
+					overlaps &= (w2 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
 
 					if (overlaps)
 					{
