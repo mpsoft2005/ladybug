@@ -123,7 +123,7 @@ inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
-void OutputBitmap(Color *frameBuffer, int frameIdx)
+void OutputBitmap(Color *frameBuffer, const char* filename)
 {
 	Bitmap bitmap(screenWidth, screenHeight);
 	for (int y = 0; y < screenHeight; y++)
@@ -134,9 +134,6 @@ void OutputBitmap(Color *frameBuffer, int frameIdx)
 			bitmap.SetPixel(x, y, pixel);
 		}
 	}
-
-	static char filename[256];
-	sprintf(filename, "./test_Rasterization_%d.bmp", frameIdx);
 	bitmap.Save(filename);
 }
 
@@ -432,7 +429,160 @@ void test_Rasterization_Diffuse_sphere_smooth()
 		}
 	}
 
-	OutputBitmap(frameBuffer, 0);
+	OutputBitmap(frameBuffer, "test_Rasterization_Diffuse_sphere_smooth.bmp");
+
+	for (size_t i = 0; i < gameObjects.size(); i++)
+	{
+		delete gameObjects[i];
+	}
+	delete[] frameBuffer;
+	delete[] depthBuffer;
+}
+
+void test_Rasterization_NormalInterpolation()
+{
+	Color *frameBuffer = new Color[screenWidth * screenHeight];
+	float *depthBuffer = new float[screenWidth * screenHeight];
+
+	for (int i = 0; i < screenWidth * screenHeight; i++)
+	{
+		// clear frame buffer
+		frameBuffer[i].r = 49 / 255.0f;
+		frameBuffer[i].g = 77 / 255.0f;
+		frameBuffer[i].b = 121 / 255.0f;
+		// clear z buffer
+		depthBuffer[i] = farClipping;
+	}
+
+	// setup lights
+	DirectionalLight light;
+	light.color = Color(1, 244 / 255.f, 214 / 255.f);
+	light.intensity = 1;
+	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
+
+	Color ambient(0, 0, 0); // ambient color
+
+	// setup game objects
+	GameObject* object;
+	std::vector<GameObject*> gameObjects;
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("plane_1.obj");
+	object->material = new Material();
+	object->material->albedo = Color(19 / 255.f, 1, 0);
+	gameObjects.push_back(object);
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("ico-sphere_1-smooth.obj");
+	object->material = new Material();
+	object->material->albedo = Color(1, 1, 1);
+	gameObjects.push_back(object);
+
+	object->mesh->Debug();
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("special-cube.obj");
+	object->material = new Material();
+	object->material->albedo = Color(1, 1, 1);
+	gameObjects.push_back(object);
+
+	int frameIdx = 0;
+	for (size_t i = 0; i < gameObjects.size(); i++)
+	{
+		Mesh* mesh = gameObjects[i]->mesh;
+		Material* material = gameObjects[i]->material;
+		size_t numTris = mesh->triangles.size() / 3;
+
+		// OpenGL Rasterization Algorithm
+		// https://en.wikibooks.org/wiki/GLSL_Programming/Rasterization
+
+		// Mesa 3D Rasterizer
+		// https://github.com/anholt/mesa/blob/master/src/gallium/docs/source/cso/rasterizer.rst
+
+		// Triangle rasterization in practice
+		// https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
+
+		for (size_t idx = 0; idx < numTris; ++idx)
+		{
+			int i0 = mesh->triangles[idx * 3];
+			int i1 = mesh->triangles[idx * 3 + 1];
+			int i2 = mesh->triangles[idx * 3 + 2];
+
+			const Vector3& v0World = mesh->vertices[i0];
+			const Vector3& v1World = mesh->vertices[i1];
+			const Vector3& v2World = mesh->vertices[i2];
+
+			Vector3 v0Raster = WorldToScreenPoint(v0World);
+			Vector3 v1Raster = WorldToScreenPoint(v1World);
+			Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+			Vector3 e0 = v2Raster - v1Raster;
+			Vector3 e1 = v0Raster - v2Raster;
+			Vector3 e2 = v1Raster - v0Raster;
+
+			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+
+			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+
+			int x0 = std::max(0, (int)(std::roundf(xmin)));
+			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
+			int y0 = std::max(0, (int)(std::roundf(ymin)));
+			int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
+
+			for (int y = y0; y <= y1; y++)
+			{
+				for (int x = x0; x <= x1; x++)
+				{
+					Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
+					float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
+					float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
+					float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
+
+					// Rasterization Rules: top-left rule
+					// inside the triangle or
+					//   1. lies on triangle top edge
+					//   2. lies on triangle left edge
+					bool overlaps = true;
+					overlaps &= (w0 == 0 ? ((e0.y == 0 && e0.x < 0) || e0.y < 0) : (w0 > 0));
+					overlaps &= (w1 == 0 ? ((e1.y == 0 && e1.x < 0) || e1.y < 0) : (w1 > 0));
+					overlaps &= (w2 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
+
+					if (overlaps)
+					{
+						w0 /= area; w1 /= area; w2 /= area;
+						float z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+
+						int idx = y * screenWidth + x;
+						if (depthBuffer[idx] > z)
+						{
+							depthBuffer[idx] = z;
+
+							// Transforming Normal Vectors
+							// https://en.wikibooks.org/wiki/GLSL_Programming/Applying_Matrix_Transformations
+
+							const Vector3& N0 = mesh->normals[i0];
+							const Vector3& N1 = mesh->normals[i1];
+							const Vector3& N2 = mesh->normals[i2];
+
+							Vector3 N = N0 * w0 / v0Raster.z + N1 * w1 / v1Raster.z + N2 * w2 / v2Raster.z;
+							N = N / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+
+							// Remember that an interpolated normal is typically not normalized?
+							N = N.normalized();
+
+							Color diffuse = material->albedo * (light.color * light.intensity) * std::max(0.f, Vector3::Dot(N, L));
+							frameBuffer[idx] = Color((N.x + 1) / 2, (N.y + 1) / 2, (N.z + 1) / 2, 1);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	OutputBitmap(frameBuffer, "test_Rasterization_NormalInterpolation.bmp");
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

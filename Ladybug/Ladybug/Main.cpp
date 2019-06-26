@@ -15,7 +15,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	test_Rasterization_Diffuse_sphere_smooth();
+	test_Rasterization_NormalInterpolation();
 
 	return 0;
 }
