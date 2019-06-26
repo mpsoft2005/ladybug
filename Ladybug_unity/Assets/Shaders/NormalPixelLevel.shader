@@ -53,7 +53,7 @@ Shader "Unity Shaders Book/Chapter 6/Normal Pixel-Level" {
 				
 				fixed3 color = ambient + diffuse;
 				
-				return fixed4(worldNormal, 1.0);
+				return fixed4((worldNormal + 1) / 2, 1.0);
 			}
 			
 			ENDCG

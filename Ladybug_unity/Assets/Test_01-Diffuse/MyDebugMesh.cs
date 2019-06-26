@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugMesh : MonoBehaviour
+public class MyDebugMesh : MonoBehaviour
 {
 
     // Use this for initialization
