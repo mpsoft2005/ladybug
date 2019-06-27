@@ -115,14 +115,9 @@ Vector3 Matrix4x4::MultiplyPoint(const Vector3& point)
 	return result;
 }
 
-static inline float Radians(float degree)
-{
-	return degree * (float)M_PI / 180;
-}
-
 Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
 {
-	float tanHalfFovy = tanf(Radians(fovy) / 2);
+	float tanHalfFovy = tanf((fovy * Mathf::Deg2Rad) / 2);
 
 	Matrix4x4 result;
 	result.m00 = 1 / (tanHalfFovy * aspect);
