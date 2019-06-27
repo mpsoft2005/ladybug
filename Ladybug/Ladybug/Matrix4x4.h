@@ -28,6 +28,11 @@ public:
 	static const Matrix4x4 zero;
 	static const Matrix4x4 identity;
 
+private:
+	static Matrix4x4 RotateX(float theta);
+	static Matrix4x4 RotateY(float theta);
+	static Matrix4x4 RotateZ(float theta);
+
 public:
 	Matrix4x4();
 	Matrix4x4(const Vector4& column0, const Vector4& column1, const Vector4& column2, const Vector4& column3);
@@ -43,5 +48,9 @@ public:
 	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);
 
 	Matrix4x4 inverse() const;
+
+	static Matrix4x4 Scale(const Vector3& vector);
+	static Matrix4x4 Rotate(const Vector3& vector);
+	static Matrix4x4 Translate(const Vector3& vector);
 };
 

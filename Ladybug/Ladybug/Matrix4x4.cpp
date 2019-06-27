@@ -7,6 +7,7 @@
 #include "Matrix4x4.h"
 #include "Vector3.h"
 #include "Vector4.h"
+#include "Mathf.h"
 
 const Matrix4x4 Matrix4x4::zero(Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0), Vector4(0, 0, 0, 0));
 const Matrix4x4 Matrix4x4::identity(Vector4(1, 0, 0, 0), Vector4(0, 1, 0, 0), Vector4(0, 0, 1, 0), Vector4(0, 0, 0, 1));
@@ -219,4 +220,71 @@ Matrix4x4 Matrix4x4::inverse() const
 		);
 
 	return R;
+}
+
+Matrix4x4 Matrix4x4::Scale(const Vector3& vector)
+{
+	Matrix4x4 result;
+	result.m00 = vector.x;
+	result.m01 = 0.f;
+	result.m02 = 0.f;
+	result.m03 = 0.f;
+	result.m10 = 0.f;
+	result.m11 = vector.y;
+	result.m12 = 0.f;
+	result.m13 = 0.f;
+	result.m20 = 0.f;
+	result.m21 = 0.f;
+	result.m22 = vector.z;
+	result.m23 = 0.f;
+	result.m30 = 0.f;
+	result.m31 = 0.f;
+	result.m32 = 0.f;
+	result.m33 = 1.f;
+	return result;
+}
+
+Matrix4x4 Matrix4x4::RotateX(float theta)
+{
+	Matrix4x4 rot = Matrix4x4::identity;
+	rot.m11 = cosf(theta);
+	rot.m12 = -sinf(theta);
+	rot.m21 = sinf(theta);
+	rot.m22 = cosf(theta);
+	return rot;
+}
+
+Matrix4x4 Matrix4x4::RotateY(float theta)
+{
+	Matrix4x4 rot = Matrix4x4::identity;
+	rot.m00 = cosf(theta);
+	rot.m02 = sinf(theta);
+	rot.m20 = -sinf(theta);
+	rot.m22 = cosf(theta);
+	return rot;
+}
+
+Matrix4x4 Matrix4x4::RotateZ(float theta)
+{
+	Matrix4x4 rot = Matrix4x4::identity;
+	rot.m00 = cosf(theta);
+	rot.m01 = -sinf(theta);
+	rot.m10 = sinf(theta);
+	rot.m11 = cosf(theta);
+	return rot;
+}
+
+Matrix4x4 Matrix4x4::Rotate(const Vector3& vector)
+{
+	Matrix4x4 rot = RotateY(vector.y * Mathf::Deg2Rad) * RotateX(vector.x * Mathf::Deg2Rad) * RotateZ(vector.z * Mathf::Deg2Rad);
+	return rot;
+}
+
+Matrix4x4 Matrix4x4::Translate(const Vector3& vector)
+{
+	Matrix4x4 t = Matrix4x4::identity;
+	t.m03 = vector.x;
+	t.m13 = vector.y;
+	t.m23 = vector.z;
+	return t;
 }
