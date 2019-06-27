@@ -18,6 +18,8 @@
 #include "SVG.h"
 #include "ObjLoader.h"
 #include "DirectionalLight.h"
+#include "Screen.h"
+#include "Camera.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
 
@@ -441,10 +443,10 @@ void test_Rasterization_Diffuse_sphere_smooth()
 
 void test_Rasterization_NormalInterpolation()
 {
-	Color *frameBuffer = new Color[screenWidth * screenHeight];
-	float *depthBuffer = new float[screenWidth * screenHeight];
+	Color *frameBuffer = new Color[Screen::width * Screen::height];
+	float *depthBuffer = new float[Screen::width * Screen::height];
 
-	for (int i = 0; i < screenWidth * screenHeight; i++)
+	for (int i = 0; i < Screen::width * Screen::height; i++)
 	{
 		// clear frame buffer
 		frameBuffer[i].r = 49 / 255.0f;
@@ -461,6 +463,23 @@ void test_Rasterization_NormalInterpolation()
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
 
 	Color ambient(0, 0, 0); // ambient color
+
+	// setup camera
+	GameObject* cameraObject = new GameObject();
+
+	Transform* t = cameraObject->transform;
+	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
+	t->localScale = Vector3(1, 1, 1);
+
+	Camera* camera = cameraObject->AddComponent<Camera>();
+	camera->fov = 45;
+	camera->near = 0.3f;
+	camera->far = 1000;
+
+	Matrix4x4 modelMatrix = Matrix4x4::identity;
+	Matrix4x4 viewMatrix = camera->worldToCameraMatrix();
+	Matrix4x4 projectionMatrix = camera->projectionMatrix();
 
 	// setup game objects
 	GameObject* object;
@@ -512,9 +531,9 @@ void test_Rasterization_NormalInterpolation()
 			const Vector3& v1World = mesh->vertices[i1];
 			const Vector3& v2World = mesh->vertices[i2];
 
-			Vector3 v0Raster = WorldToScreenPoint(v0World);
-			Vector3 v1Raster = WorldToScreenPoint(v1World);
-			Vector3 v2Raster = WorldToScreenPoint(v2World);
+			Vector3 v0Raster = camera->WorldToScreenPoint(v0World);
+			Vector3 v1Raster = camera->WorldToScreenPoint(v1World);
+			Vector3 v2Raster = camera->WorldToScreenPoint(v2World);
 
 			Vector3 e0 = v2Raster - v1Raster;
 			Vector3 e1 = v0Raster - v2Raster;
