@@ -1,6 +1,8 @@
 
 #include <math.h>
 #include <assert.h>
+#include <stdio.h>
+#include <memory.h>
 
 #include "Matrix4x4.h"
 #include "Vector3.h"
@@ -51,6 +53,17 @@ Matrix4x4::Matrix4x4(const Vector4& column0, const Vector4& column1, const Vecto
 
 Matrix4x4::~Matrix4x4()
 {
+}
+
+Matrix4x4::Matrix4x4(const Matrix4x4& rhs)
+{
+	memcpy(this->m, rhs.m, sizeof(this->m));
+}
+
+Matrix4x4& Matrix4x4::operator=(const Matrix4x4& rhs)
+{
+	memcpy(this->m, rhs.m, sizeof(this->m));
+	return *this;
 }
 
 Matrix4x4 Matrix4x4::operator* (const Matrix4x4& rhs) const

@@ -97,15 +97,15 @@ Mesh* test_CreateCubeMesh()
 
 void test_PrintVector3(const Vector3& v)
 {
-	printf("  %.5f %.5f %.5f\n", v.x, v.y, v.z);
+	printf("  %.6f %.6f %.6f\n", v.x, v.y, v.z);
 }
 
 void test_PrintMatrix(const Matrix4x4& M)
 {
-	printf("  %.5f %.5f %.5f %.5f\n", M.m00, M.m01, M.m02, M.m03);
-	printf("  %.5f %.5f %.5f %.5f\n", M.m10, M.m11, M.m12, M.m13);
-	printf("  %.5f %.5f %.5f %.5f\n", M.m20, M.m21, M.m22, M.m23);
-	printf("  %.5f %.5f %.5f %.5f\n", M.m30, M.m31, M.m32, M.m33);
+	printf("  %.6f %.6f %.6f %.6f\n", M.m00, M.m01, M.m02, M.m03);
+	printf("  %.6f %.6f %.6f %.6f\n", M.m10, M.m11, M.m12, M.m13);
+	printf("  %.6f %.6f %.6f %.6f\n", M.m20, M.m21, M.m22, M.m23);
+	printf("  %.6f %.6f %.6f %.6f\n", M.m30, M.m31, M.m32, M.m33);
 }
 
 void test_Matrix4x4()
@@ -116,6 +116,8 @@ void test_Matrix4x4()
 		Vector4(0, 0, 1, 0),
 		Vector4(1, 2, 3, 1)
 	);
+	printf("translationMatrix is:\n");
+	test_PrintMatrix(translationMatrix);
 
 	Matrix4x4 rotationMatrix(
 		Vector4(0.8434932f, 0.492404f, -0.21461f, 0),
@@ -123,6 +125,8 @@ void test_Matrix4x4()
 		Vector4(0.336824f, -0.1736483f, 0.9254165f, 0),
 		Vector4(0, 0, 0, 1)
 	);
+	printf("rotationMatrix is:\n");
+	test_PrintMatrix(rotationMatrix);
 
 	Matrix4x4 scalingMatrix(
 		Vector4(0.1f, 0, 0, 0),
@@ -130,6 +134,8 @@ void test_Matrix4x4()
 		Vector4(0, 0, 0.3f, 0),
 		Vector4(0, 0, 0, 1)
 	);
+	printf("scalingMatrix is:\n");
+	test_PrintMatrix(scalingMatrix);
 
 	Matrix4x4 transformationMatrix = translationMatrix * rotationMatrix * scalingMatrix;
 
