@@ -71,6 +71,11 @@ public class CustomRotation : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Debug.Log("cameraToWorldMatrix:");
+        Debug.Log(Camera.main.cameraToWorldMatrix);
+        Debug.Log("worldToCameraMatrix:");
+        Debug.Log(Camera.main.worldToCameraMatrix);
+
         Debug.Log("View Matrix:");
         Debug.Log(Camera.main.worldToCameraMatrix);
         Debug.Log("Projection Matrix:");
