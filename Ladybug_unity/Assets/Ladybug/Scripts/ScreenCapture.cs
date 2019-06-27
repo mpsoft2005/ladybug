@@ -15,7 +15,7 @@ public class ScreenCapture : MonoBehaviour
             capture = false;
 
             RenderTexture oldTexture;
-            RenderTexture renderTexture = new RenderTexture(640, 480, 24);
+            RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
 
             oldTexture = Camera.main.targetTexture;
             Camera.main.targetTexture = renderTexture;
@@ -29,7 +29,7 @@ public class ScreenCapture : MonoBehaviour
             texture.Apply();
             RenderTexture.active = oldTexture;
 
-            Bitmap bitmap = new Bitmap(640, 480);
+            Bitmap bitmap = new Bitmap(Screen.width, Screen.height);
             bitmap.SetPixels(texture.GetPixels32());
             bitmap.Save(captureFilename);
         }
