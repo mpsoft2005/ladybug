@@ -115,6 +115,8 @@ Vector3 Matrix4x4::MultiplyPoint(const Vector3& point)
 	return result;
 }
 
+// Reference: glm perspectiveLH_NO
+// https://github.com/g-truc/glm/blob/master/glm/ext/matrix_clip_space.inl
 Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
 {
 	float tanHalfFovy = tanf((fovy * Mathf::Deg2Rad) / 2);
@@ -123,7 +125,7 @@ Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zF
 	result.m00 = 1 / (tanHalfFovy * aspect);
 	result.m11 = 1 / (tanHalfFovy);
 	result.m22 = -(zFar + zNear) / (zFar - zNear);
-	result.m23 = -2 * zFar*zNear / (zFar - zNear);
+	result.m23 = -2 * zFar * zNear / (zFar - zNear);
 	result.m32 = -1;
 
 	return result;

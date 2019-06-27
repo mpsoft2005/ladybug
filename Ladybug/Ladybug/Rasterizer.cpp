@@ -481,6 +481,9 @@ void test_Rasterization_NormalInterpolation()
 	Matrix4x4 viewMatrix = camera->worldToCameraMatrix();
 	Matrix4x4 projectionMatrix = camera->projectionMatrix();
 
+	printf("projectionMatrix is:\n");
+	test_PrintMatrix(projectionMatrix);
+
 	// setup game objects
 	GameObject* object;
 	std::vector<GameObject*> gameObjects;
@@ -496,8 +499,6 @@ void test_Rasterization_NormalInterpolation()
 	object->material = new Material();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
-
-	object->mesh->Debug();
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("special-cube.obj");
