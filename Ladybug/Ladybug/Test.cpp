@@ -139,8 +139,11 @@ void test_Matrix4x4()
 
 	Matrix4x4 transformationMatrix = translationMatrix * rotationMatrix * scalingMatrix;
 
-	printf("Transformation Matrix is:\n");
+	printf("transformationMatrix is:\n");
 	test_PrintMatrix(transformationMatrix);
+
+	printf("transformationMatrix.inverse() is:\n");
+	test_PrintMatrix(transformationMatrix.inverse());
 }
 
 void test_PerspectiveMatrix()

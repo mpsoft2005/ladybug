@@ -41,5 +41,7 @@ public:
 
 	Vector3 MultiplyPoint(const Vector3& point);
 	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);
+
+	Matrix4x4 inverse() const;
 };
 
