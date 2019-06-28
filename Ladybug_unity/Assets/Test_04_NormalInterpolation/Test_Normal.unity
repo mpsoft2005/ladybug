@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capture: 0
-  captureFilename: normal.bmp
+  captureFilename: Build/Test_04_NormalInterpolation_unity.bmp
 --- !u!114 &409868123
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	test_Rasterization_NormalInterpolation();
+	Test_04_NormalInterpolation();
 
 	return 0;
 }

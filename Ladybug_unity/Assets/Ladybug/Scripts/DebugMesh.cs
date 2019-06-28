@@ -11,7 +11,7 @@ public class DebugMesh : MonoBehaviour
 
     private void Awake()
     {
-        FileStream stream = File.OpenWrite("debug.log");
+        FileStream stream = File.OpenWrite("Build/unity_debug.log");
         streamWriter = new StreamWriter(stream);
     }
 

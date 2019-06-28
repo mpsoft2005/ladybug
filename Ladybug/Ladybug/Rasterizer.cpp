@@ -441,7 +441,7 @@ void test_Rasterization_Diffuse_sphere_smooth()
 	delete[] depthBuffer;
 }
 
-void test_Rasterization_NormalInterpolation()
+void Test_04_NormalInterpolation()
 {
 	Color *frameBuffer = new Color[Screen::width * Screen::height];
 	float *depthBuffer = new float[Screen::width * Screen::height];
@@ -602,7 +602,7 @@ void test_Rasterization_NormalInterpolation()
 		}
 	}
 
-	OutputBitmap(frameBuffer, "test_Rasterization_NormalInterpolation.bmp");
+	OutputBitmap(frameBuffer, "Test_04_NormalInterpolation_ladybug.bmp");
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
