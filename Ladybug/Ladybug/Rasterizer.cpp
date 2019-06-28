@@ -20,6 +20,7 @@
 #include "DirectionalLight.h"
 #include "Screen.h"
 #include "Camera.h"
+#include "Mathf.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
 
@@ -66,15 +67,7 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
-inline float min(float a, float b, float c)
-{
-	return std::min(a, std::min(b, c));
-}
 
-inline float max(float a, float b, float c)
-{
-	return std::max(a, std::max(b, c));
-}
 
 // calc signed area of parallelogram
 inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
@@ -174,10 +167,10 @@ void test_Rasterization()
 
 			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 
-			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
-			float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmin = Mathf::Min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = Mathf::Min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = Mathf::Max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = Mathf::Max(v0Raster.y, v1Raster.y, v2Raster.y);
 
 			int x0 = std::max(0, (int)(std::roundf(xmin)));
 			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
@@ -328,10 +321,10 @@ void Test_03_SmoothSphere_Diffuse()
 
 			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 
-			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
-			float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmin = Mathf::Min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = Mathf::Min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = Mathf::Max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = Mathf::Max(v0Raster.y, v1Raster.y, v2Raster.y);
 
 			int x0 = std::max(0, (int)(std::roundf(xmin)));
 			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
@@ -501,10 +494,10 @@ void Test_04_NormalInterpolation()
 
 			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 
-			float xmin = min(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymin = min(v0Raster.y, v1Raster.y, v2Raster.y);
-			float xmax = max(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymax = max(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmin = Mathf::Min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = Mathf::Min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = Mathf::Max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = Mathf::Max(v0Raster.y, v1Raster.y, v2Raster.y);
 
 			int x0 = std::max(0, (int)(std::roundf(xmin)));
 			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
