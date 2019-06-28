@@ -66,49 +66,6 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
-
-void test_Raster()
-{
-	printf("MVP Matrix:\n");
-	test_PrintMatrix(mvpMatrix);
-
-	Vector3 worldPoint(1.000000f, -1.000000f, 5.000000f);
-	printf("World Point:\n");
-	test_PrintVector3(worldPoint);
-
-	Vector3 viewportPoint = WorldToViewportPoint(worldPoint);
-	printf("Viewport Point:\n");
-	test_PrintVector3(viewportPoint);
-
-	Vector3 screenPoint = WorldToScreenPoint(worldPoint);
-	printf("Screen Point:\n");
-	test_PrintVector3(screenPoint);
-
-
-	SVG svg(screenWidth, screenHeight);
-	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(0, 0, 0), 1, Color32(0, 0, 255));
-
-	Mesh* mesh = test_CreatePlaneMesh();
-	size_t numTris = mesh->triangles.size() / 3;
-
-	for (size_t i = 0; i < numTris; ++i) {
-		const Vector3& v0World = mesh->vertices[mesh->triangles[i * 3]];
-		const Vector3& v1World = mesh->vertices[mesh->triangles[i * 3 + 1]];
-		const Vector3& v2World = mesh->vertices[mesh->triangles[i * 3 + 2]];
-
-		Vector3 v0Raster = WorldToScreenPoint(v0World);
-		Vector3 v1Raster = WorldToScreenPoint(v1World);
-		Vector3 v2Raster = WorldToScreenPoint(v2World);
-
-		svg.DrawLine(v0Raster.x, screenHeight - v0Raster.y, v1Raster.x, screenHeight - v1Raster.y, Color32(0, 0, 0), 1);
-		svg.DrawLine(v1Raster.x, screenHeight - v1Raster.y, v2Raster.x, screenHeight - v2Raster.y, Color32(0, 0, 0), 1);
-		svg.DrawLine(v2Raster.x, screenHeight - v2Raster.y, v0Raster.x, screenHeight - v0Raster.y, Color32(0, 0, 0), 1);
-	}
-	svg.Save("./test_Raster.svg");
-
-	delete mesh;
-}
-
 inline float min(float a, float b, float c)
 {
 	return std::min(a, std::min(b, c));
