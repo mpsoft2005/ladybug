@@ -218,8 +218,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 409868121}
+  - component: {fileID: 409868122}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Debug Utility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,6 +239,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &409868122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 409868120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d755f38b5e99d54448a9f788f4707051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  capture: 0
+  captureFilename: Build/Test_03_SmoothSphere_Diffuse_unity.bmp
 --- !u!1001 &916199208
 Prefab:
   m_ObjectHideFlags: 0
@@ -330,7 +344,7 @@ Prefab:
     - target: {fileID: 2300000, guid: 70bc1a118b0c5234e903d8a7c3279e10, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: dee65b75b0280bc49adc6cabde5b8e2a, type: 2}
+      objectReference: {fileID: 2100000, guid: 525e8fcae3901e740af8b2c31e5d74ec, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 70bc1a118b0c5234e903d8a7c3279e10, type: 3}
   m_IsPrefabParent: 0
@@ -381,7 +395,7 @@ Prefab:
     - target: {fileID: 2300000, guid: 7bf5d6829ca2bc0429f50cdd3a4dd574, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: dee65b75b0280bc49adc6cabde5b8e2a, type: 2}
+      objectReference: {fileID: 2100000, guid: 525e8fcae3901e740af8b2c31e5d74ec, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7bf5d6829ca2bc0429f50cdd3a4dd574, type: 3}
   m_IsPrefabParent: 0

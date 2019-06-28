@@ -289,7 +289,7 @@ void test_Rasterization()
 	delete[] depthBuffer;
 }
 
-void test_Rasterization_Diffuse_sphere_smooth()
+void Test_03_SmoothSphere_Diffuse()
 {
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
 	float *depthBuffer = new float[screenWidth * screenHeight];
@@ -431,7 +431,7 @@ void test_Rasterization_Diffuse_sphere_smooth()
 		}
 	}
 
-	OutputBitmap(frameBuffer, "test_Rasterization_Diffuse_sphere_smooth.bmp");
+	OutputBitmap(frameBuffer, "Test_03_SmoothSphere_Diffuse_ladybug.bmp");
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

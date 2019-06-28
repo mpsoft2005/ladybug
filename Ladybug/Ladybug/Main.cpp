@@ -15,7 +15,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	Test_04_NormalInterpolation();
+	Test_03_SmoothSphere_Diffuse();
 
 	return 0;
 }

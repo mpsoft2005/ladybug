@@ -2,5 +2,5 @@
 
 void test_Raster();
 void test_Rasterization();
-void test_Rasterization_Diffuse_sphere_smooth();
+void Test_03_SmoothSphere_Diffuse();
 void Test_04_NormalInterpolation();
