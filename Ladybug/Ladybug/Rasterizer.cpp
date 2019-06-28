@@ -481,7 +481,9 @@ void Test_04_NormalInterpolation()
 	Matrix4x4 viewMatrix = camera->worldToCameraMatrix();
 	Matrix4x4 projectionMatrix = camera->projectionMatrix();
 
-	printf("projectionMatrix is:\n");
+	printf("View Matrix is:\n");
+	test_PrintMatrix(viewMatrix);
+	printf("Projection Matrix is:\n");
 	test_PrintMatrix(projectionMatrix);
 
 	// setup game objects

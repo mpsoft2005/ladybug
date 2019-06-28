@@ -204,8 +204,9 @@ GameObject:
   - component: {fileID: 409868121}
   - component: {fileID: 409868122}
   - component: {fileID: 409868123}
+  - component: {fileID: 409868124}
   m_Layer: 0
-  m_Name: Screen Capture
+  m_Name: Debug Utility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,6 +250,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshFilter: {fileID: 758469610}
+--- !u!114 &409868124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 409868120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f270ffbbb95d394a9bfe82473e0323b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &758469610 stripped
 MeshFilter:
   m_PrefabParentObject: {fileID: 3300000, guid: 70bc1a118b0c5234e903d8a7c3279e10,
