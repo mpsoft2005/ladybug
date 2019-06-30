@@ -6,6 +6,8 @@ class Material
 {
 public:
 	Color albedo;
+	Color specular;
+	float specularGloss;
 
 public:
 	Material();

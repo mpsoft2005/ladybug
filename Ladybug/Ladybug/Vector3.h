@@ -25,6 +25,7 @@ public:
 	Vector3 operator/(float d) const;
 	Vector3 operator+(const Vector3 &rhs) const;
 	Vector3 operator-(const Vector3 &rhs) const;
+	Vector3 operator-() const;
 	Vector3 operator*(float d) const;
 
 	Vector3 normalized() const;

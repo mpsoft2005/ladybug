@@ -15,7 +15,7 @@ int main()
 {
 	printf("Welcome to Ladybug Engine!\n");
 
-	Test_03_SmoothSphere_Diffuse();
+	Test_06_Specular();
 
 	return 0;
 }
