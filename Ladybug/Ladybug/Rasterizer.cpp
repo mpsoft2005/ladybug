@@ -40,11 +40,11 @@ static Matrix4x4 projectionMatrix(
 
 static Matrix4x4 mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-const int screenWidth = 640;
-const int screenHeight = 480;
+const int& screenWidth = Screen::width;
+const int& screenHeight = Screen::height;
 
-const float nearClipping = 0.3f;
-const float farClipping = 1000.0f;
+static float nearClipping = 0.3f;
+static float farClipping = 1000.0f;
 
 Vector3 WorldToViewportPoint(Vector3 pos)
 {
@@ -58,7 +58,7 @@ Vector3 WorldToViewportPoint(Vector3 pos)
 	float viewportX = (vNDC.x + 1) / 2;
 	float viewportY = (vNDC.y + 1) / 2;
 
-	return Vector3(viewportX, viewportY, v2.w);
+	return Vector3(viewportX, viewportY, pos.z);
 }
 
 Vector3 WorldToScreenPoint(Vector3 pos)
@@ -84,6 +84,28 @@ void OutputBitmap(Color *frameBuffer, const char* filename)
 		{
 			const Color& pixel = frameBuffer[y * screenWidth + x];
 			bitmap.SetPixel(x, y, pixel);
+		}
+	}
+	bitmap.Save(filename);
+}
+
+void OutputDepthBuffer(float *depthBuffer, float near, float far, const char* filename)
+{
+	Bitmap bitmap(screenWidth, screenHeight);
+	for (int y = 0; y < screenHeight; y++)
+	{
+		for (int x = 0; x < screenWidth; x++)
+		{
+			float z = depthBuffer[y * screenWidth + x];
+			float normalized = (z - near) / (far - near);
+
+			printf("(%d, %d) z=%f normalized z=%f\n", x, y, z, normalized);
+
+			if (normalized >= 0 && normalized <= 1)
+			{
+				Color c(normalized, normalized, normalized);
+				bitmap.SetPixel(x, y, c);
+			}
 		}
 	}
 	bitmap.Save(filename);
@@ -235,7 +257,7 @@ void test_Rasterization()
 	OutputBitmap(frameBuffer, 0);
 
 	SVG svg(screenWidth, screenHeight);
-	svg.DrawRect(0, 0, screenWidth, screenHeight, Color32(18, 18, 18), 1, Color32(200, 200, 200));
+	svg.DrawRect(0, 0, (float)screenWidth, (float)screenHeight, Color32(18, 18, 18), 1, Color32(200, 200, 200));
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
@@ -752,5 +774,150 @@ void Test_06_Specular()
 		delete gameObjects[i];
 	}
 	delete[] frameBuffer;
+	delete[] depthBuffer;
+}
+
+void Test_07_ShadowMaps()
+{
+	Screen::width = 512;
+	Screen::height = 512;
+
+	nearClipping = 0.3f;
+	farClipping = 20;
+
+	float *depthBuffer = new float[Screen::width * Screen::height];
+
+	for (int i = 0; i < Screen::width * Screen::height; i++)
+	{
+		// clear z buffer
+		depthBuffer[i] = farClipping;
+	}
+
+	// setup lights
+	DirectionalLight light;
+	light.transform->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
+	light.transform->localEulerAngles = Vector3(50, 30, 0);
+
+	light.color = Color(1, 244 / 255.f, 214 / 255.f);
+	light.intensity = 1;
+
+	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
+
+	Color ambient(0, 0, 0); // ambient color
+	Color lightColor = light.color * light.intensity;
+
+	// setup camera
+	//   orthographic projection
+	//   size: 7
+	//   near clipping: 0.3
+	//   far clipping: 20
+
+	viewMatrix = Matrix4x4(
+		Vector4(0.8660253f, 0.3830223f, -0.3213939f, 0),
+		Vector4(0, 0.6427876f, 0.7660444f, 0),
+		Vector4(-0.5000001f, 0.6634139f, -0.5566704f, 0),
+		Vector4(0.001665354f, 1.230089f, -6.619311f, 1)
+	);
+
+	projectionMatrix = Matrix4x4(
+		Vector4(0.1428571f, 0, 0, 0),
+		Vector4(0, 0.1428571f, 0, 0),
+		Vector4(0, 0, -0.1015228f, 0),
+		Vector4(0, 0, -1.030457f, 1)
+	);
+
+	mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
+
+	// setup game objects
+	GameObject* object;
+	std::vector<GameObject*> gameObjects;
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("sphere_1.obj");
+	gameObjects.push_back(object);
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("ground_1.obj");
+	gameObjects.push_back(object);
+
+	for (size_t i = 0; i < gameObjects.size(); i++)
+	{
+		Mesh* mesh = gameObjects[i]->mesh;
+		size_t numTris = mesh->triangles.size() / 3;
+
+		for (size_t idx = 0; idx < numTris; ++idx)
+		{
+			int i0 = mesh->triangles[idx * 3];
+			int i1 = mesh->triangles[idx * 3 + 1];
+			int i2 = mesh->triangles[idx * 3 + 2];
+
+			const Vector3& v0World = mesh->vertices[i0];
+			const Vector3& v1World = mesh->vertices[i1];
+			const Vector3& v2World = mesh->vertices[i2];
+
+			Vector3 v0Raster = WorldToScreenPoint(v0World);
+			Vector3 v1Raster = WorldToScreenPoint(v1World);
+			Vector3 v2Raster = WorldToScreenPoint(v2World);
+
+			float z0 = v0Raster.z;
+			float z1 = v1Raster.z;
+			float z2 = v2Raster.z;
+
+			Vector3 e0 = v2Raster - v1Raster;
+			Vector3 e1 = v0Raster - v2Raster;
+			Vector3 e2 = v1Raster - v0Raster;
+
+			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+
+			float xmin = Mathf::Min(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymin = Mathf::Min(v0Raster.y, v1Raster.y, v2Raster.y);
+			float xmax = Mathf::Max(v0Raster.x, v1Raster.x, v2Raster.x);
+			float ymax = Mathf::Max(v0Raster.y, v1Raster.y, v2Raster.y);
+
+			int x0 = std::max(0, (int)(std::roundf(xmin)));
+			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
+			int y0 = std::max(0, (int)(std::roundf(ymin)));
+			int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
+
+			for (int y = y0; y <= y1; y++)
+			{
+				for (int x = x0; x <= x1; x++)
+				{
+					Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
+					float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
+					float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
+					float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
+
+					// Rasterization Rules: top-left rule
+					// inside the triangle or
+					//   1. lies on triangle top edge
+					//   2. lies on triangle left edge
+					bool overlaps = true;
+					overlaps &= (w0 == 0 ? ((e0.y == 0 && e0.x < 0) || e0.y < 0) : (w0 > 0));
+					overlaps &= (w1 == 0 ? ((e1.y == 0 && e1.x < 0) || e1.y < 0) : (w1 > 0));
+					overlaps &= (w2 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
+
+					if (overlaps)
+					{
+						w0 /= area; w1 /= area; w2 /= area;
+						float z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+
+						int idx = y * screenWidth + x;
+						if (depthBuffer[idx] > z)
+						{
+							depthBuffer[idx] = z;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	OutputDepthBuffer(depthBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_ladybug.bmp");
+
+	for (size_t i = 0; i < gameObjects.size(); i++)
+	{
+		delete gameObjects[i];
+	}
 	delete[] depthBuffer;
 }
