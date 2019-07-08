@@ -58,7 +58,7 @@ Vector3 WorldToViewportPoint(Vector3 pos)
 	float viewportX = (vNDC.x + 1) / 2;
 	float viewportY = (vNDC.y + 1) / 2;
 
-	return Vector3(viewportX, viewportY, pos.z);
+	return Vector3(viewportX, viewportY, v2.w);
 }
 
 Vector3 WorldToScreenPoint(Vector3 pos)
@@ -67,7 +67,29 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
+Vector3 WorldToViewportPoint_orthographic(Vector3 pos)
+{
+	Vector4 v1(pos.x, pos.y, pos.z, 1);
+	Vector4 v2 = mvpMatrix * v1;
 
+	Vector3 vNDC;
+	vNDC.x = v2.x / v2.w;
+	vNDC.y = v2.y / v2.w;
+	vNDC.z = v2.z / v2.w;
+
+	float viewportX = (vNDC.x + 1) / 2;
+	float viewportY = (vNDC.y + 1) / 2;
+	float viewportZ = (vNDC.z + 1) / 2;
+
+	return Vector3(viewportX, viewportY, viewportZ);
+}
+
+Vector3 WorldToScreenPoint_orthographic(Vector3 pos)
+{
+	Vector3 viewportPoint = WorldToViewportPoint_orthographic(pos);
+	float z = viewportPoint.z * (farClipping - nearClipping) + nearClipping;
+	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, z);
+}
 
 // calc signed area of parallelogram
 inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
@@ -98,9 +120,6 @@ void OutputDepthBuffer(float *depthBuffer, float near, float far, const char* fi
 		{
 			float z = depthBuffer[y * screenWidth + x];
 			float normalized = (z - near) / (far - near);
-
-			printf("(%d, %d) z=%f normalized z=%f\n", x, y, z, normalized);
-
 			if (normalized >= 0 && normalized <= 1)
 			{
 				Color c(normalized, normalized, normalized);
@@ -855,9 +874,9 @@ void Test_07_ShadowMaps()
 			const Vector3& v1World = mesh->vertices[i1];
 			const Vector3& v2World = mesh->vertices[i2];
 
-			Vector3 v0Raster = WorldToScreenPoint(v0World);
-			Vector3 v1Raster = WorldToScreenPoint(v1World);
-			Vector3 v2Raster = WorldToScreenPoint(v2World);
+			Vector3 v0Raster = WorldToScreenPoint_orthographic(v0World);
+			Vector3 v1Raster = WorldToScreenPoint_orthographic(v1World);
+			Vector3 v2Raster = WorldToScreenPoint_orthographic(v2World);
 
 			float z0 = v0Raster.z;
 			float z1 = v1Raster.z;
@@ -900,7 +919,7 @@ void Test_07_ShadowMaps()
 					if (overlaps)
 					{
 						w0 /= area; w1 /= area; w2 /= area;
-						float z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+						float z = w0 * z0 + w1 *z1 + w2 *z2;
 
 						int idx = y * screenWidth + x;
 						if (depthBuffer[idx] > z)
