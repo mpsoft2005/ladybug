@@ -12,6 +12,8 @@ public class ShadowMaps : MonoBehaviour
         Vector3 vRaster = Camera.main.WorldToScreenPoint(vWorld);
         Debug.Log("vWorld");
         Debug.Log(vRaster);
+
+        QualitySettings.shadows = ShadowQuality.All;
     }
 
     // Update is called once per frame
