@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ShadowMaps : MonoBehaviour
 {
+    public Transform light;
 
     // Use this for initialization
     void Start()
@@ -14,6 +15,10 @@ public class ShadowMaps : MonoBehaviour
         Debug.Log(vRaster);
 
         QualitySettings.shadows = ShadowQuality.All;
+
+        Vector3 lightDir = -light.forward;
+        Debug.Log("lightDir");
+        Debug.LogFormat("{0}, {1}, {2}", lightDir.x, lightDir.y, lightDir.z);
     }
 
     // Update is called once per frame

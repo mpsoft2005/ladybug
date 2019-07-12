@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capture: 0
-  captureFilename: Build/Test_06_Specular_unity.bmp
+  captureFilename: Build/Test_07_ShadowMaps_soft-shadow_unity.bmp
 --- !u!114 &409868123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95387905e8030204dadbec3331f8d5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  light: {fileID: 1432542395}
 --- !u!1 &817967928
 GameObject:
   m_ObjectHideFlags: 0
