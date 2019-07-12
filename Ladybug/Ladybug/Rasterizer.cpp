@@ -483,14 +483,13 @@ void Test_04_NormalInterpolation()
 	Color ambient(0, 0, 0); // ambient color
 
 	// setup camera
-	GameObject* cameraObject = new GameObject();
+	Camera* camera = new Camera();
 
-	Transform* t = cameraObject->transform;
+	Transform* t = camera->transform;
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	Camera* camera = cameraObject->AddComponent<Camera>();
 	camera->fov = 45;
 	camera->near = 0.3f;
 	camera->far = 1000;
@@ -657,14 +656,13 @@ void Test_06_Specular()
 	Color lightColor = light.color * light.intensity;
 
 	// setup camera
-	GameObject* cameraObject = new GameObject();
+	Camera* camera = new Camera();
 
-	Transform* t = cameraObject->transform;
+	Transform* t = camera->transform;
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	Camera* camera = cameraObject->AddComponent<Camera>();
 	camera->fov = 45;
 	camera->near = 0.3f;
 	camera->far = 1000;
@@ -773,7 +771,7 @@ void Test_06_Specular()
 							Vector3 vWorld = InterpolateVertexAttribute(v0World, v1World, v2World, z0, z1, z2, w0, w1, w2);
 
 							Vector3 reflectDir = reflect(-L, N).normalized();
-							Vector3 viewDir = (cameraObject->transform->localPosition - vWorld).normalized();
+							Vector3 viewDir = (camera->transform->localPosition - vWorld).normalized();
 
 							Color diffuse = material->albedo * lightColor * std::max(0.f, Vector3::Dot(N, L));
 							Color specular = material->specular * lightColor * pow(saturate(Vector3::Dot(reflectDir, viewDir)), material->specularGloss);
