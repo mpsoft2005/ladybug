@@ -21,6 +21,7 @@
 #include "Screen.h"
 #include "Camera.h"
 #include "Mathf.h"
+#include "World.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
 
@@ -793,6 +794,44 @@ void Test_06_Specular()
 	delete[] frameBuffer;
 	delete[] depthBuffer;
 }
+
+void Test_06_Specular_World()
+{
+	World world;
+
+	// setup camera
+	world.camera = new Camera();
+
+	Transform* t = world.camera->transform;
+	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
+	t->localScale = Vector3(1, 1, 1);
+
+	world.camera->fov = 45;
+	world.camera->near = 0.3f;
+	world.camera->far = 1000;
+
+	// setup lights
+	world.directionalLight = new DirectionalLight();
+	world.directionalLight->color = Color(1, 244 / 255.f, 214 / 255.f);
+	world.directionalLight->intensity = 1;
+
+	// setup game objects
+	GameObject* object;
+
+	object = new GameObject();
+	object->mesh = ObjLoader::Load("sphere_1.obj");
+	object->material = new Material();
+	object->material->albedo = Color(1, 1, 1);
+	object->material->specular = Color(1, 1, 1);
+	object->material->specularGloss = 20;
+
+	world.gameObjects.push_back(object);
+
+	world.Render();
+	OutputBitmap(world.frameBuffer, "Test_06_Specular_World_ladybug.bmp");
+}
+
 
 void Test_07_ShadowMaps()
 {

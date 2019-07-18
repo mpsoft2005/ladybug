@@ -16,6 +16,7 @@ int main()
 	printf("Welcome to Ladybug Engine!\n");
 
 	Test_06_Specular();
+	Test_06_Specular_World();
 	Test_07_ShadowMaps();
 
 	return 0;
