@@ -83,7 +83,8 @@ void World::Render()
 		depthBuffer[i] = camera->far;
 	}
 
-	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
+	// light direction
+	Vector3 L = directionalLight->getDirection();
 
 	Color ambient(0, 0, 0); // ambient color
 	Color lightColor = directionalLight->color * directionalLight->intensity;

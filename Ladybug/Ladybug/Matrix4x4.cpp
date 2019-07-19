@@ -115,6 +115,15 @@ Vector3 Matrix4x4::MultiplyPoint(const Vector3& point)
 	return result;
 }
 
+Vector3 Matrix4x4::MultiplyPoint3x4(const Vector3& point)
+{
+	Vector3 result;
+	result.x = m00 * point.x + m01 * point.y + m02 * point.z + m03;
+	result.y = m10 * point.x + m11 * point.y + m12 * point.z + m13;
+	result.z = m20 * point.x + m21 * point.y + m22 * point.z + m23;
+	return result;
+}
+
 // Reference: glm perspectiveLH_NO
 // https://github.com/g-truc/glm/blob/master/glm/ext/matrix_clip_space.inl
 Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)

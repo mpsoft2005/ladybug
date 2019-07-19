@@ -45,6 +45,7 @@ public:
 	Vector4 operator* (const Vector4& vector) const;
 
 	Vector3 MultiplyPoint(const Vector3& point);
+	Vector3 MultiplyPoint3x4(const Vector3& point); // it can only handle regular 3D transformations
 	static Matrix4x4 Perspective(float fovy, float aspect, float zNear, float zFar);
 
 	Matrix4x4 inverse() const;

@@ -13,4 +13,6 @@ public:
 public:
 	DirectionalLight();
 	~DirectionalLight();
+
+	Vector3 getDirection();
 };

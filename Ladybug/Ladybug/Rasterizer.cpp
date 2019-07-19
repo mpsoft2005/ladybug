@@ -805,7 +805,6 @@ void Test_06_Specular_World()
 	Transform* t = world.camera->transform;
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
-	t->localScale = Vector3(1, 1, 1);
 
 	world.camera->fov = 45;
 	world.camera->near = 0.3f;
@@ -815,6 +814,10 @@ void Test_06_Specular_World()
 	world.directionalLight = new DirectionalLight();
 	world.directionalLight->color = Color(1, 244 / 255.f, 214 / 255.f);
 	world.directionalLight->intensity = 1;
+
+	t = world.directionalLight->transform;
+	t->localPosition = Vector3(0, 3, 0);
+	t->localEulerAngles = Vector3(50, -30, 0);
 
 	// setup game objects
 	GameObject* object;
