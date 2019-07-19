@@ -10,11 +10,18 @@ public:
 	Transform *transform = 0;
 
 	bool orthographic = false;
-	float orthographicSize = 5;
+	float orthographicSize = 5; // Camera's half-size when in orthographic mode
 
 	float fieldOfView = 60;
 	float nearClipPlane = 0.3f;
 	float farClipPlane = 1000;
+
+private:
+	Vector3 WorldToViewportPoint_Perspective(const Vector3& position);
+	Vector3 WorldToScreenPoint_Perspective(const Vector3& position);
+
+	Vector3 WorldToViewportPoint_Ortho(const Vector3& position);
+	Vector3 WorldToScreenPoint_Ortho(const Vector3& position);
 
 public:
 	Camera();

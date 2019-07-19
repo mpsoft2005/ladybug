@@ -124,7 +124,24 @@ Vector3 Matrix4x4::MultiplyPoint3x4(const Vector3& point)
 	return result;
 }
 
-// Reference: glm perspectiveLH_NO
+// https://github.com/g-truc/glm/blob/master/glm/ext/matrix_clip_space.inl
+// Reference: glm orthoRH_NO
+//   RH: RIGHT_HANDED, For OpenGL
+//   NO: NEGATIVE_ONE_TO_ONE
+Matrix4x4 Matrix4x4::Ortho(float left, float right, float bottom, float top, float zNear, float zFar)
+{
+	Matrix4x4 result;
+	result.m00 = 2.f / (right - left);
+	result.m11 = 2.f / (top - bottom);
+	result.m22 = -2.f / (zFar - zNear);
+	result.m03 = -(right + left) / (right - left);
+	result.m13 = -(top + bottom) / (top - bottom);
+	result.m23 = -(zFar + zNear) / (zFar - zNear);
+	result.m33 = 1.f;
+	return result;
+}
+
+// Reference: glm perspectiveRH_NO
 // https://github.com/g-truc/glm/blob/master/glm/ext/matrix_clip_space.inl
 Matrix4x4 Matrix4x4::Perspective(float fovy, float aspect, float zNear, float zFar)
 {

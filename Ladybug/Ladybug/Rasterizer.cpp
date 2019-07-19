@@ -68,30 +68,6 @@ Vector3 WorldToScreenPoint(Vector3 pos)
 	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, viewportPoint.z);
 }
 
-Vector3 WorldToViewportPoint_orthographic(Vector3 pos)
-{
-	Vector4 v1(pos.x, pos.y, pos.z, 1);
-	Vector4 v2 = mvpMatrix * v1;
-
-	Vector3 vNDC;
-	vNDC.x = v2.x / v2.w;
-	vNDC.y = v2.y / v2.w;
-	vNDC.z = v2.z / v2.w;
-
-	float viewportX = (vNDC.x + 1) / 2;
-	float viewportY = (vNDC.y + 1) / 2;
-	float viewportZ = (vNDC.z + 1) / 2;
-
-	return Vector3(viewportX, viewportY, viewportZ);
-}
-
-Vector3 WorldToScreenPoint_orthographic(Vector3 pos)
-{
-	Vector3 viewportPoint = WorldToViewportPoint_orthographic(pos);
-	float z = viewportPoint.z * (farClipping - nearClipping) + nearClipping;
-	return Vector3(viewportPoint.x * screenWidth, viewportPoint.y * screenHeight, z);
-}
-
 // calc signed area of parallelogram
 inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
 {
@@ -871,21 +847,15 @@ void Test_07_ShadowMaps()
 	//   near clipping: 0.3
 	//   far clipping: 20
 
-	viewMatrix = Matrix4x4(
-		Vector4(0.8660253f, 0.3830223f, -0.3213939f, 0),
-		Vector4(0, 0.6427876f, 0.7660444f, 0),
-		Vector4(-0.5000001f, 0.6634139f, -0.5566704f, 0),
-		Vector4(0.001665354f, 1.230089f, -6.619311f, 1)
-	);
+	Camera* orthoCamera = new Camera();
+	Transform* t = orthoCamera->transform;
+	t->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
+	t->localEulerAngles = Vector3(50, 30, 0);
 
-	projectionMatrix = Matrix4x4(
-		Vector4(0.1428571f, 0, 0, 0),
-		Vector4(0, 0.1428571f, 0, 0),
-		Vector4(0, 0, -0.1015228f, 0),
-		Vector4(0, 0, -1.030457f, 1)
-	);
-
-	mvpMatrix = projectionMatrix * viewMatrix * modelMatrix;
+	orthoCamera->orthographic = true;
+	orthoCamera->orthographicSize = 7;
+	orthoCamera->nearClipPlane = 0.3f;
+	orthoCamera->farClipPlane = 20;
 
 	// setup game objects
 	GameObject* object;
@@ -922,9 +892,9 @@ void Test_07_ShadowMaps()
 			const Vector3& v1World = mesh->vertices[i1];
 			const Vector3& v2World = mesh->vertices[i2];
 
-			Vector3 v0Raster = WorldToScreenPoint_orthographic(v0World);
-			Vector3 v1Raster = WorldToScreenPoint_orthographic(v1World);
-			Vector3 v2Raster = WorldToScreenPoint_orthographic(v2World);
+			Vector3 v0Raster = orthoCamera->WorldToScreenPoint(v0World);
+			Vector3 v1Raster = orthoCamera->WorldToScreenPoint(v1World);
+			Vector3 v2Raster = orthoCamera->WorldToScreenPoint(v2World);
 
 			float z0 = v0Raster.z;
 			float z1 = v1Raster.z;
@@ -998,7 +968,7 @@ void Test_07_ShadowMaps()
 	// setup camera
 	Camera* camera = new Camera();
 
-	Transform* t = camera->transform;
+	t = camera->transform;
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
@@ -1097,7 +1067,7 @@ void Test_07_ShadowMaps()
 							N = N.normalized();
 
 							Vector3 vWorld = InterpolateVertexAttribute(v0World, v1World, v2World, z0, z1, z2, w0, w1, w2);
-							Vector3 vLightSpace = WorldToScreenPoint_orthographic(vWorld);
+							Vector3 vLightSpace = orthoCamera->WorldToScreenPoint(vWorld);
 							int shadowBufferIdx = (int)(std::roundf(vLightSpace.y) * screenWidth + std::roundf(vLightSpace.x));
 
 							Vector3 reflectDir = reflect(-L, N).normalized();
