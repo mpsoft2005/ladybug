@@ -491,9 +491,9 @@ void Test_04_NormalInterpolation()
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	camera->fov = 45;
-	camera->near = 0.3f;
-	camera->far = 1000;
+	camera->fieldOfView = 45;
+	camera->nearClipPlane = 0.3f;
+	camera->farClipPlane = 1000;
 
 	Matrix4x4 modelMatrix = Matrix4x4::identity;
 	Matrix4x4 viewMatrix = camera->worldToCameraMatrix();
@@ -664,9 +664,9 @@ void Test_06_Specular()
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	camera->fov = 45;
-	camera->near = 0.3f;
-	camera->far = 1000;
+	camera->fieldOfView = 45;
+	camera->nearClipPlane = 0.3f;
+	camera->farClipPlane = 1000;
 
 	// setup game objects
 	GameObject* object;
@@ -806,9 +806,9 @@ void Test_06_Specular_World()
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 
-	world.camera->fov = 45;
-	world.camera->near = 0.3f;
-	world.camera->far = 1000;
+	world.camera->fieldOfView = 45;
+	world.camera->nearClipPlane = 0.3f;
+	world.camera->farClipPlane = 1000;
 
 	// setup lights
 	world.directionalLight = new DirectionalLight();
@@ -1003,9 +1003,9 @@ void Test_07_ShadowMaps()
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	camera->fov = 45;
-	camera->near = 0.3f;
-	camera->far = 1000;
+	camera->fieldOfView = 45;
+	camera->nearClipPlane = 0.3f;
+	camera->farClipPlane = 1000;
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

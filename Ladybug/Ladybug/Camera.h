@@ -8,9 +8,13 @@ class Camera
 {
 public:
 	Transform *transform = 0;
-	float fov = 60;
-	float near = 0.3f;
-	float far = 1000;
+
+	bool orthographic = false;
+	float orthographicSize = 5;
+
+	float fieldOfView = 60;
+	float nearClipPlane = 0.3f;
+	float farClipPlane = 1000;
 
 public:
 	Camera();

@@ -80,7 +80,7 @@ void World::Render()
 		frameBuffer[i].g = 77 / 255.0f;
 		frameBuffer[i].b = 121 / 255.0f;
 		// clear z buffer
-		depthBuffer[i] = camera->far;
+		depthBuffer[i] = camera->farClipPlane;
 	}
 
 	// light direction

@@ -33,7 +33,7 @@ Matrix4x4 Camera::worldToCameraMatrix()
 Matrix4x4 Camera::projectionMatrix()
 {
 	float aspect = (float)Screen::width / Screen::height;
-	return Matrix4x4::Perspective(fov, aspect, near, far);
+	return Matrix4x4::Perspective(fieldOfView, aspect, nearClipPlane, farClipPlane);
 }
 
 Vector3 Camera::WorldToViewportPoint(const Vector3& pos)
