@@ -38,10 +38,9 @@ Matrix4x4 Camera::projectionMatrix()
 
 Vector3 Camera::WorldToViewportPoint(const Vector3& pos)
 {
-	// TODO: What if Camera property changed?
-	static Matrix4x4 view = worldToCameraMatrix();
-	static Matrix4x4 projection = projectionMatrix();
-	static Matrix4x4 mvp = projection * view;
+	Matrix4x4 view = worldToCameraMatrix();
+	Matrix4x4 projection = projectionMatrix();
+	Matrix4x4 mvp = projection * view;
 
 	Vector4 v1(pos.x, pos.y, pos.z, 1);
 	Vector4 v2 = mvp * v1;
