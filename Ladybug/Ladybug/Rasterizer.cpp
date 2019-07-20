@@ -22,6 +22,7 @@
 #include "Camera.h"
 #include "Mathf.h"
 #include "World.h"
+#include "ShadowMap.h"
 
 static Matrix4x4 modelMatrix = Matrix4x4::identity;
 
@@ -951,6 +952,18 @@ void Test_07_ShadowMaps()
 	}
 
 	OutputDepthBuffer(shadowMapBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
+
+	// Test ShadowMap class
+	{
+		World world;
+		world.gameObjects = gameObjects;
+
+		ShadowMap shadowMap(&light);
+		shadowMap.Render(world);
+
+		OutputDepthBuffer(shadowMap.depthBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
+		world.gameObjects = std::vector<GameObject*>();
+	}
 
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
 	float *depthBuffer = new float[screenWidth * screenHeight];

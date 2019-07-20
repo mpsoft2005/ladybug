@@ -1,18 +1,25 @@
 #pragma once
 
+#include "Vector2.h"
+#include "Vector3.h"
+
 class Color;
-class Vector3;
 class World;
 class Pipeline;
 
 struct a2v
 {
-
+	Vector3 vertex;
+	Vector3 normal;
+	Vector2 uv;
 };
 
 struct v2f
 {
-
+	Vector3 pos;
+	Vector3 worldPos;
+	Vector3 normal;
+	Vector2 uv;
 };
 
 class PipelineListener
@@ -25,7 +32,6 @@ public:
 class Pipeline
 {
 private:
-	World* world = 0;
 	PipelineListener* listener = 0;
 
 public:
@@ -33,6 +39,6 @@ public:
 	~Pipeline();
 
 	void RegisterListener(PipelineListener* listener);
-	void Process();
+	void Process(const World& world, float *depthBuffer, Color *frameBuffer, int screenWidth, int screenHeight);
 };
 
