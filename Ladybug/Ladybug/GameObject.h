@@ -15,9 +15,6 @@ public:
 	Mesh* mesh = NULL;
 	Material* material = NULL;
 
-private:
-	std::vector<Component*> components;
-
 public:
 	GameObject();
 	~GameObject();
