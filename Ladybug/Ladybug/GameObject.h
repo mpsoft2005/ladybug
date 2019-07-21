@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "Transform.h"
 #include "Mesh.h"
@@ -11,9 +12,9 @@ class GameObject
 {
 public:
 	std::string name;
-	Transform* transform = NULL;
-	Mesh* mesh = NULL;
-	Material* material = NULL;
+	std::unique_ptr<Transform> transform;
+	std::shared_ptr<Mesh> mesh;
+	std::shared_ptr<Material> material;
 
 public:
 	GameObject();

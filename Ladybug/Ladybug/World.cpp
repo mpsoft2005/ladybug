@@ -91,8 +91,8 @@ void World::Render()
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm

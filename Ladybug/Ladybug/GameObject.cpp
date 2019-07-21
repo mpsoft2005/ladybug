@@ -4,13 +4,11 @@
 
 GameObject::GameObject()
 {
-	transform = new Transform();
+	transform = std::make_unique<Transform>();
 }
 
 
 GameObject::~GameObject()
 {
-	delete transform;
-	delete mesh;
-	delete material;
+
 }

@@ -164,13 +164,13 @@ void test_Rasterization()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("plane_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(19 / 255.f, 1, 0);
 	gameObjects.push_back(object);
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("ico-sphere_1-flat.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
@@ -178,14 +178,14 @@ void test_Rasterization()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("special-cube.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm
@@ -258,7 +258,7 @@ void test_Rasterization()
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
+		Mesh* mesh = gameObjects[i]->mesh.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		for (size_t idx = 0; idx < numTris; ++idx) {
@@ -314,13 +314,13 @@ void Test_03_SmoothSphere_Diffuse()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("plane_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(19 / 255.f, 1, 0);
 	gameObjects.push_back(object);
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("ico-sphere_1-smooth.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
@@ -328,14 +328,14 @@ void Test_03_SmoothSphere_Diffuse()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("special-cube.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm
@@ -487,27 +487,27 @@ void Test_04_NormalInterpolation()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("plane_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(19 / 255.f, 1, 0);
 	gameObjects.push_back(object);
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("ico-sphere_1-smooth.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("special-cube.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	gameObjects.push_back(object);
 
 	int frameIdx = 0;
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm
@@ -651,7 +651,7 @@ void Test_06_Specular()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("sphere_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	object->material->specular = Color(1, 1, 1);
 	object->material->specularGloss = 20;
@@ -659,8 +659,8 @@ void Test_06_Specular()
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm
@@ -805,7 +805,7 @@ void Test_06_Specular_World()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("sphere_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	object->material->specular = Color(1, 1, 1);
 	object->material->specularGloss = 20;
@@ -870,7 +870,7 @@ void Test_07_ShadowMaps()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("sphere_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	object->material->specular = Color(1, 1, 1);
 	object->material->specularGloss = 20;
@@ -878,7 +878,7 @@ void Test_07_ShadowMaps()
 
 	object = new GameObject();
 	object->mesh = ObjLoader::Load("ground_1.obj");
-	object->material = new Material();
+	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
 	object->material->specular = Color(0, 0, 0);
 	object->material->specularGloss = 20;
@@ -886,7 +886,7 @@ void Test_07_ShadowMaps()
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
+		Mesh* mesh = gameObjects[i]->mesh.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		for (size_t idx = 0; idx < numTris; ++idx)
@@ -999,8 +999,8 @@ void Test_07_ShadowMaps()
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
-		Mesh* mesh = gameObjects[i]->mesh;
-		Material* material = gameObjects[i]->material;
+		Mesh* mesh = gameObjects[i]->mesh.get();
+		Material* material = gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm

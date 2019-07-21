@@ -102,7 +102,7 @@ inline Vector3 ConvertNormal(const Vector3& n)
 	return Vector3(-n.x, n.y, n.z).normalized();
 }
 
-Mesh* ObjLoader::Load(const char* filename)
+std::shared_ptr<Mesh> ObjLoader::Load(const char* filename)
 {
 	FILE * file = fopen(filename, "r");
 	if (file == NULL)
@@ -111,7 +111,8 @@ Mesh* ObjLoader::Load(const char* filename)
 		return NULL;
 	}
 
-	Mesh* mesh = new Mesh();
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+
 	std::vector<Vector3> vertices;
 	std::vector<Vector3> normals;
 	std::vector<Vector2> uv;

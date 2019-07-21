@@ -42,8 +42,8 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 {
 	for (size_t i = 0; i < world.gameObjects.size(); i++)
 	{
-		Mesh* mesh = world.gameObjects[i]->mesh;
-		Material* material = world.gameObjects[i]->material;
+		Mesh* mesh = world.gameObjects[i]->mesh.get();
+		Material* material = world.gameObjects[i]->material.get();
 		size_t numTris = mesh->triangles.size() / 3;
 
 		// OpenGL Rasterization Algorithm
