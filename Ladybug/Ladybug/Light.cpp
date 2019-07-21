@@ -4,13 +4,13 @@
 
 Light::Light()
 {
-	transform = new Transform();
+	transform = std::make_unique<Transform>();
 }
 
 
 Light::~Light()
 {
-	delete transform;
+
 }
 
 Vector3 Light::getDirection()

@@ -1,12 +1,14 @@
 #pragma once
 
+#include <memory>
+
 #include "Color.h"
 #include "Transform.h"
 
 class Light
 {
 public:
-	Transform* transform = 0;
+	std::unique_ptr<Transform> transform;
 	Color color = Color(1, 1, 1);
 	float intensity = 1;
 
