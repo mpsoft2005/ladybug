@@ -38,6 +38,9 @@ class Pipeline
 private:
 	PipelineListener* listener = 0;
 
+private:
+	float ShadowFactor(const World& world, const Vector3& v);
+
 public:
 	Pipeline();
 	~Pipeline();

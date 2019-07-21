@@ -7,9 +7,17 @@
 #include "World.h"
 
 
-ShadowMap::ShadowMap(std::shared_ptr<Light> light)
+ShadowMap::ShadowMap(const Light& light)
 {
-	this->light = light;
+	camera = std::make_shared<Camera>();
+	camera->transform->localPosition = light.transform->localPosition;
+	camera->transform->localEulerAngles = light.transform->localEulerAngles;
+
+	// TODO: remove hard-coded params of camera
+	camera->orthographic = true;
+	camera->orthographicSize = 7;
+	camera->nearClipPlane = 0.3f;
+	camera->farClipPlane = 20;
 }
 
 ShadowMap::~ShadowMap()
@@ -34,16 +42,6 @@ void ShadowMap::Render(const std::vector< std::shared_ptr<GameObject> >& gameObj
 	{
 		depthBuffer = std::make_unique<float[]>(width * height);
 	}
-
-	camera = std::make_shared<Camera>();
-	camera->transform->localPosition = light->transform->localPosition;
-	camera->transform->localEulerAngles = light->transform->localEulerAngles;
-
-	// TODO: remove hard-coded params of camera
-	camera->orthographic = true;
-	camera->orthographicSize = 7;
-	camera->nearClipPlane = 0.3f;
-	camera->farClipPlane = 20;
 
 	for (int i = 0; i < width * height; i++)
 	{

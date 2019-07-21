@@ -3,10 +3,10 @@
 #include <vector>
 #include <memory>
 
-#include "Light.h"
 #include "Pipeline.h"
 #include "GameObject.h"
 
+class Light;
 class Camera;
 
 class ShadowMap : PipelineListener
@@ -18,7 +18,6 @@ public:
 	std::unique_ptr<float[]> depthBuffer;
 
 private:
-	std::shared_ptr<Light> light;
 	std::shared_ptr<Camera> camera;
 
 private:
@@ -26,7 +25,7 @@ private:
 	virtual Color OnProcessFragment(const Pipeline& pipe, const v2f& in);
 
 public:
-	ShadowMap(std::shared_ptr<Light> light);
+	ShadowMap(const Light& light);
 	~ShadowMap();
 
 	void Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects);

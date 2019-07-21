@@ -831,6 +831,7 @@ void Test_07_ShadowMaps()
 
 	light->color = Color(1, 244 / 255.f, 214 / 255.f);
 	light->intensity = 1;
+	light->shadows = LightShadows::SHADOW_HARD;
 
 	Vector3 L = light->getDirection();
 
@@ -858,7 +859,7 @@ void Test_07_ShadowMaps()
 	gameObjects.push_back(object);
 
 	// Test ShadowMap class
-	ShadowMap shadowMap(light);
+	ShadowMap shadowMap(*light);
 	shadowMap.Render(gameObjects);
 	OutputDepthBuffer(shadowMap.depthBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
 

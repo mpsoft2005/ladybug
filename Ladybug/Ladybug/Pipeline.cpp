@@ -9,6 +9,8 @@
 #include "Mathf.h"
 #include "World.h"
 #include "Camera.h"
+#include "Light.h"
+#include "ShadowMap.h"
 
 // calc signed area of parallelogram
 static inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
@@ -38,6 +40,15 @@ Pipeline::~Pipeline()
 void Pipeline::RegisterListener(PipelineListener* listener)
 {
 	this->listener = listener;
+}
+
+float Pipeline::ShadowFactor(const World& world, const Vector3& v)
+{
+	if (world.light != nullptr)
+	{
+		return world.light->ShadowFactor(world, v);
+	}
+	return 1.f;
 }
 
 // OpenGL Rasterization Algorithm
@@ -146,7 +157,8 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 								f.normal = N.normalized();
 								f.worldPos = vWorld;
 								f.material = material;
-								frameBuffer[idx] = listener->OnProcessFragment(*this, f);
+								Color c = listener->OnProcessFragment(*this, f);
+								frameBuffer[idx] = c * ShadowFactor(world, vWorld);
 							}
 						}
 					}
