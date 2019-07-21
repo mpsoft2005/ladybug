@@ -181,18 +181,15 @@ void test_SavePPM(const char* filename, int width, int height, const Color* buff
 
 void test_Camera()
 {
-	GameObject* mainCamera = new GameObject();
+	Camera camera;
 
-	Transform* t = mainCamera->transform;
+	Transform* t = camera.transform;
 	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
 	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
 	t->localScale = Vector3(1, 1, 1);
 
-	Camera* camera = mainCamera->AddComponent<Camera>();
-	Matrix4x4 worldToCamera = camera->worldToCameraMatrix();
+	Matrix4x4 worldToCamera = camera.worldToCameraMatrix();
 
 	printf("worldToCamera matrix:\n");
 	test_PrintMatrix(worldToCamera);
-
-	delete mainCamera;
 }
