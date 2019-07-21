@@ -867,5 +867,7 @@ void Test_07_ShadowMaps()
 	world.gameObjects.push_back(object);
 
 	world.Render();
+	std::shared_ptr<ShadowMap> shadowMap = world.light->GetShadowMap(world);
+	OutputDepthBuffer(shadowMap->depthBuffer.get(), 0.3f, 20.f, "Test_07_ShadowMaps_0_ladybug.bmp");
 	OutputBitmap(world.frameBuffer.get(), "Test_07_ShadowMaps_2_no-pcf_bias-0.05_ladybug.bmp");
 }

@@ -7,7 +7,7 @@
 #include "World.h"
 
 
-ShadowMap::ShadowMap(const Light& light)
+ShadowMap::ShadowMap(const Light& light, const std::vector< std::shared_ptr<GameObject> >& gameObjects)
 {
 	camera = std::make_shared<Camera>();
 	camera->transform->localPosition = light.transform->localPosition;
@@ -18,6 +18,8 @@ ShadowMap::ShadowMap(const Light& light)
 	camera->orthographicSize = 7;
 	camera->nearClipPlane = 0.3f;
 	camera->farClipPlane = 20;
+
+	Render(gameObjects);
 }
 
 ShadowMap::~ShadowMap()

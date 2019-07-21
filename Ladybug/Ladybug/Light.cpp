@@ -21,15 +21,25 @@ Vector3 Light::GetDirection()
 	return lightDir;
 }
 
+void Light::PrepareShadowMap(const World& world)
+{
+	if (shadowMap == nullptr)
+	{
+		shadowMap = std::make_shared<ShadowMap>(*this, world.gameObjects);
+	}
+}
+
+std::shared_ptr<ShadowMap> Light::GetShadowMap(const World& world)
+{
+	PrepareShadowMap(world);
+	return shadowMap;
+}
+
 float Light::ShadowFactor(const World& world, const Vector3& v)
 {
 	if (shadows == LightShadows::SHADOW_NONE)
 		return 1.f;
 
-	if (shadowMap == nullptr)
-	{
-		shadowMap = std::make_unique<ShadowMap>(*this);
-		shadowMap->Render(world.gameObjects);
-	}
+	PrepareShadowMap(world);
 	return shadowMap->ShadowFactor(v);
 }

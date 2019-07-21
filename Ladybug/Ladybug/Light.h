@@ -22,14 +22,19 @@ public:
 	Color color = Color(1, 1, 1);
 	float intensity = 1;
 
-	std::unique_ptr<ShadowMap> shadowMap;
 	LightShadows shadows = LightShadows::SHADOW_NONE;
 	float shadowBias = 0.05f;
+
+private:
+	std::shared_ptr<ShadowMap> shadowMap;
+
+	void PrepareShadowMap(const World& world);
 
 public:
 	Light();
 	~Light();
 
 	Vector3 GetDirection();
+	std::shared_ptr<ShadowMap> GetShadowMap(const World& world);
 	float ShadowFactor(const World& world, const Vector3& v);
 };

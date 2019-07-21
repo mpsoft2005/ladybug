@@ -21,14 +21,15 @@ private:
 	std::shared_ptr<Camera> camera;
 
 private:
+	void Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects);
+
 	virtual v2f OnProcessVertex(const Pipeline& pipe, const a2v& in);
 	virtual Color OnProcessFragment(const Pipeline& pipe, const v2f& in);
 
 public:
-	ShadowMap(const Light& light);
+	ShadowMap(const Light& light, const std::vector< std::shared_ptr<GameObject> >& gameObjects);
 	~ShadowMap();
 
-	void Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects);
 	float ShadowFactor(const Vector3& v);
 };
 
