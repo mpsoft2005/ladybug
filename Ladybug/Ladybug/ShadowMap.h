@@ -1,9 +1,11 @@
 #pragma once
 
+#include <vector>
 #include <memory>
 
 #include "Light.h"
 #include "Pipeline.h"
+#include "GameObject.h"
 
 class Camera;
 
@@ -26,6 +28,6 @@ public:
 	ShadowMap(std::shared_ptr<Light> light);
 	~ShadowMap();
 
-	void Render(const World& world);
+	void Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects);
 };
 

@@ -965,7 +965,7 @@ void Test_07_ShadowMaps()
 		world.gameObjects = gameObjects;
 
 		ShadowMap shadowMap(light);
-		shadowMap.Render(world);
+		shadowMap.Render(world.gameObjects);
 
 		OutputDepthBuffer(shadowMap.depthBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
 	}

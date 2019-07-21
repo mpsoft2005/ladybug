@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "Mesh.h"
 #include "Mathf.h"
+#include "World.h"
+#include "Camera.h"
 
 // calc signed area of parallelogram
 static inline float edgeFunction(const Vector3& a, const Vector3& b, const Vector3& c)
@@ -40,6 +42,8 @@ void Pipeline::RegisterListener(PipelineListener* listener)
 
 void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffer, int screenWidth, int screenHeight)
 {
+	bool orthographic = world.camera->orthographic;
+
 	for (size_t i = 0; i < world.gameObjects.size(); i++)
 	{
 		Mesh* mesh = world.gameObjects[i]->mesh.get();
@@ -57,25 +61,19 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 
 		for (size_t idx = 0; idx < numTris; ++idx)
 		{
-			int i0 = mesh->triangles[idx * 3];
-			int i1 = mesh->triangles[idx * 3 + 1];
-			int i2 = mesh->triangles[idx * 3 + 2];
-
-			const Vector3& v0World = mesh->vertices[i0]; // TODO: remove v0World / v1World / v2World
-			const Vector3& v1World = mesh->vertices[i1];
-			const Vector3& v2World = mesh->vertices[i2];
-
 			v2f f[3];
+			Vector3 v[3];
 
 			for (int k = 0; k < 3; k++)
 			{
 				int vertIdx = mesh->triangles[idx * 3 + k];
 
-				a2v v;
-				v.vertex = mesh->vertices[vertIdx];
-				v.normal = mesh->normals[vertIdx];
+				a2v in;
+				in.vertex = mesh->vertices[vertIdx];
+				in.normal = mesh->normals[vertIdx];
 
-				f[k] = listener->OnProcessVertex(*this, v);
+				v[k] = in.vertex;
+				f[k] = listener->OnProcessVertex(*this, in);
 			}
 
 			Vector3 v0Raster = f[0].pos;
@@ -123,7 +121,16 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 					if (overlaps)
 					{
 						w0 /= area; w1 /= area; w2 /= area;
-						float z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+
+						float z = 0;
+						if (orthographic)
+						{
+							z = w0 * z0 + w1 * z1 + w2 * z2;
+						}
+						else
+						{
+							z = 1.f / (w0 / v0Raster.z + w1 / v1Raster.z + w2 / v2Raster.z);
+						}
 
 						int idx = y * screenWidth + x;
 						if (depthBuffer[idx] > z)
@@ -142,7 +149,7 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 							// Remember that an interpolated normal is typically not normalized?
 							N = N.normalized();
 
-							Vector3 vWorld = InterpolateVertexAttribute(v0World, v1World, v2World, z0, z1, z2, w0, w1, w2);
+							Vector3 vWorld = InterpolateVertexAttribute(v[0], v[1], v[2], z0, z1, z2, w0, w1, w2);
 
 							if (frameBuffer != nullptr)
 							{

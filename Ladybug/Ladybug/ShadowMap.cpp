@@ -4,6 +4,7 @@
 #include "Screen.h"
 #include "Pipeline.h"
 #include "Light.h"
+#include "World.h"
 
 
 ShadowMap::ShadowMap(std::shared_ptr<Light> light)
@@ -16,7 +17,7 @@ ShadowMap::~ShadowMap()
 
 }
 
-void ShadowMap::Render(const World& world)
+void ShadowMap::Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects)
 {
 	if (depthBuffer == nullptr)
 	{
@@ -38,6 +39,10 @@ void ShadowMap::Render(const World& world)
 		// clear z buffer
 		depthBuffer[i] = camera->farClipPlane;
 	}
+
+	World world;
+	world.camera = camera;
+	world.gameObjects = gameObjects;
 
 	Pipeline pipe;
 	pipe.RegisterListener(this);
