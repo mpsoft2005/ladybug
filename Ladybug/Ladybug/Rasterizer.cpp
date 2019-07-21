@@ -463,10 +463,10 @@ void Test_04_NormalInterpolation()
 	// setup camera
 	Camera* camera = new Camera();
 
-	Transform* t = camera->transform;
-	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
-	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
-	t->localScale = Vector3(1, 1, 1);
+	Transform& t = *camera->transform;
+	t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+	t.localEulerAngles = Vector3(28.321f, -48.981f, 0);
+	t.localScale = Vector3(1, 1, 1);
 
 	camera->fieldOfView = 45;
 	camera->nearClipPlane = 0.3f;
@@ -636,10 +636,10 @@ void Test_06_Specular()
 	// setup camera
 	Camera* camera = new Camera();
 
-	Transform* t = camera->transform;
-	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
-	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
-	t->localScale = Vector3(1, 1, 1);
+	Transform& t = *camera->transform;
+	t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+	t.localEulerAngles = Vector3(28.321f, -48.981f, 0);
+	t.localScale = Vector3(1, 1, 1);
 
 	camera->fieldOfView = 45;
 	camera->nearClipPlane = 0.3f;
@@ -777,24 +777,28 @@ void Test_06_Specular_World()
 	World world;
 
 	// setup camera
-	world.camera = new Camera();
+	{
+		world.camera = new Camera();
 
-	Transform* t = world.camera->transform;
-	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
-	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
+		Transform& t = *world.camera->transform;
+		t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+		t.localEulerAngles = Vector3(28.321f, -48.981f, 0);
 
-	world.camera->fieldOfView = 45;
-	world.camera->nearClipPlane = 0.3f;
-	world.camera->farClipPlane = 1000;
+		world.camera->fieldOfView = 45;
+		world.camera->nearClipPlane = 0.3f;
+		world.camera->farClipPlane = 1000;
+	}
 
 	// setup lights
-	world.light = new Light();
-	world.light->color = Color(1, 244 / 255.f, 214 / 255.f);
-	world.light->intensity = 1;
+	{
+		world.light = new Light();
+		world.light->color = Color(1, 244 / 255.f, 214 / 255.f);
+		world.light->intensity = 1;
 
-	t = world.light->transform;
-	t->localPosition = Vector3(0, 3, 0);
-	t->localEulerAngles = Vector3(50, -30, 0);
+		Transform& t = *world.light->transform;
+		t.localPosition = Vector3(0, 3, 0);
+		t.localEulerAngles = Vector3(50, -30, 0);
+	}
 
 	// setup game objects
 	GameObject* object;
@@ -849,14 +853,16 @@ void Test_07_ShadowMaps()
 	//   far clipping: 20
 
 	Camera* orthoCamera = new Camera();
-	Transform* t = orthoCamera->transform;
-	t->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
-	t->localEulerAngles = Vector3(50, 30, 0);
+	{
+		Transform& t = *orthoCamera->transform;
+		t.localPosition = Vector3(-2.6f, 4.28f, -4.5f);
+		t.localEulerAngles = Vector3(50, 30, 0);
 
-	orthoCamera->orthographic = true;
-	orthoCamera->orthographicSize = 7;
-	orthoCamera->nearClipPlane = 0.3f;
-	orthoCamera->farClipPlane = 20;
+		orthoCamera->orthographic = true;
+		orthoCamera->orthographicSize = 7;
+		orthoCamera->nearClipPlane = 0.3f;
+		orthoCamera->farClipPlane = 20;
+	}
 
 	// setup game objects
 	GameObject* object;
@@ -980,15 +986,16 @@ void Test_07_ShadowMaps()
 
 	// setup camera
 	Camera* camera = new Camera();
+	{
+		Transform& t = *camera->transform;
+		t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+		t.localEulerAngles = Vector3(28.321f, -48.981f, 0);
+		t.localScale = Vector3(1, 1, 1);
 
-	t = camera->transform;
-	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
-	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
-	t->localScale = Vector3(1, 1, 1);
-
-	camera->fieldOfView = 45;
-	camera->nearClipPlane = 0.3f;
-	camera->farClipPlane = 1000;
+		camera->fieldOfView = 45;
+		camera->nearClipPlane = 0.3f;
+		camera->farClipPlane = 1000;
+	}
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

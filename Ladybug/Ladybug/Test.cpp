@@ -183,10 +183,10 @@ void test_Camera()
 {
 	Camera camera;
 
-	Transform* t = camera.transform;
-	t->localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
-	t->localEulerAngles = Vector3(28.321f, -48.981f, 0);
-	t->localScale = Vector3(1, 1, 1);
+	Transform& t = *camera.transform;
+	t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
+	t.localEulerAngles = Vector3(28.321f, -48.981f, 0);
+	t.localScale = Vector3(1, 1, 1);
 
 	Matrix4x4 worldToCamera = camera.worldToCameraMatrix();
 

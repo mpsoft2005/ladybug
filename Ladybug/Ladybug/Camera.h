@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Transform.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
@@ -7,7 +9,7 @@
 class Camera
 {
 public:
-	Transform *transform = 0;
+	std::unique_ptr<Transform> transform;
 
 	bool orthographic = false;
 	float orthographicSize = 5; // Camera's half-size when in orthographic mode
