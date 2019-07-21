@@ -17,6 +17,17 @@ ShadowMap::~ShadowMap()
 
 }
 
+float ShadowMap::ShadowFactor(const Vector3& v)
+{
+	Vector3 vLightSpace = camera->WorldToScreenPoint(v);
+	int shadowBufferIdx = (int)(std::roundf(vLightSpace.y) * width + std::roundf(vLightSpace.x));
+
+	if (vLightSpace.z - shadowBias <= depthBuffer[shadowBufferIdx])
+		return 1.f;
+	else
+		return 0.f;
+}
+
 void ShadowMap::Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects)
 {
 	if (depthBuffer == nullptr)

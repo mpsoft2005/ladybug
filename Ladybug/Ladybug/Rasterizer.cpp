@@ -824,14 +824,6 @@ void Test_07_ShadowMaps()
 	nearClipping = 0.3f;
 	farClipping = 20;
 
-	std::unique_ptr<float[]> shadowMapBuffer(new float[Screen::width * Screen::height]);
-
-	for (int i = 0; i < Screen::width * Screen::height; i++)
-	{
-		// clear z buffer
-		shadowMapBuffer[i] = farClipping;
-	}
-
 	// setup lights
 	std::shared_ptr<Light> light = std::make_shared<Light>();
 	light->transform->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
@@ -840,28 +832,10 @@ void Test_07_ShadowMaps()
 	light->color = Color(1, 244 / 255.f, 214 / 255.f);
 	light->intensity = 1;
 
-	Vector3 L(-0.3213939f, 0.7660444f, -0.5566704f); // light direction
+	Vector3 L = light->getDirection();
 
 	Color ambient(0, 0, 0); // ambient color
 	Color lightColor = light->color * light->intensity;
-
-	// setup camera
-	//   orthographic projection
-	//   size: 7
-	//   near clipping: 0.3
-	//   far clipping: 20
-
-	Camera* orthoCamera = new Camera();
-	{
-		Transform& t = *orthoCamera->transform;
-		t.localPosition = Vector3(-2.6f, 4.28f, -4.5f);
-		t.localEulerAngles = Vector3(50, 30, 0);
-
-		orthoCamera->orthographic = true;
-		orthoCamera->orthographicSize = 7;
-		orthoCamera->nearClipPlane = 0.3f;
-		orthoCamera->farClipPlane = 20;
-	}
 
 	// setup game objects
 	std::shared_ptr<GameObject> object;
@@ -883,91 +857,10 @@ void Test_07_ShadowMaps()
 	object->material->specularGloss = 20;
 	gameObjects.push_back(object);
 
-	for (size_t i = 0; i < gameObjects.size(); i++)
-	{
-		Mesh* mesh = gameObjects[i]->mesh.get();
-		size_t numTris = mesh->triangles.size() / 3;
-
-		for (size_t idx = 0; idx < numTris; ++idx)
-		{
-			int i0 = mesh->triangles[idx * 3];
-			int i1 = mesh->triangles[idx * 3 + 1];
-			int i2 = mesh->triangles[idx * 3 + 2];
-
-			const Vector3& v0World = mesh->vertices[i0];
-			const Vector3& v1World = mesh->vertices[i1];
-			const Vector3& v2World = mesh->vertices[i2];
-
-			Vector3 v0Raster = orthoCamera->WorldToScreenPoint(v0World);
-			Vector3 v1Raster = orthoCamera->WorldToScreenPoint(v1World);
-			Vector3 v2Raster = orthoCamera->WorldToScreenPoint(v2World);
-
-			float z0 = v0Raster.z;
-			float z1 = v1Raster.z;
-			float z2 = v2Raster.z;
-
-			Vector3 e0 = v2Raster - v1Raster;
-			Vector3 e1 = v0Raster - v2Raster;
-			Vector3 e2 = v1Raster - v0Raster;
-
-			float area = edgeFunction(v0Raster, v1Raster, v2Raster);
-
-			float xmin = Mathf::Min(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymin = Mathf::Min(v0Raster.y, v1Raster.y, v2Raster.y);
-			float xmax = Mathf::Max(v0Raster.x, v1Raster.x, v2Raster.x);
-			float ymax = Mathf::Max(v0Raster.y, v1Raster.y, v2Raster.y);
-
-			int x0 = std::max(0, (int)(std::roundf(xmin)));
-			int x1 = std::min(screenWidth - 1, (int)(std::roundf(xmax)));
-			int y0 = std::max(0, (int)(std::roundf(ymin)));
-			int y1 = std::min(screenHeight - 1, (int)(std::roundf(ymax)));
-
-			for (int y = y0; y <= y1; y++)
-			{
-				for (int x = x0; x <= x1; x++)
-				{
-					Vector3 pixelSample(x + 0.5f, y + 0.5f, 0);
-					float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
-					float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
-					float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
-
-					// Rasterization Rules: top-left rule
-					// inside the triangle or
-					//   1. lies on triangle top edge
-					//   2. lies on triangle left edge
-					bool overlaps = true;
-					overlaps &= (w0 == 0 ? ((e0.y == 0 && e0.x < 0) || e0.y < 0) : (w0 > 0));
-					overlaps &= (w1 == 0 ? ((e1.y == 0 && e1.x < 0) || e1.y < 0) : (w1 > 0));
-					overlaps &= (w2 == 0 ? ((e2.y == 0 && e2.x < 0) || e2.y < 0) : (w2 > 0));
-
-					if (overlaps)
-					{
-						w0 /= area; w1 /= area; w2 /= area;
-						float z = w0 * z0 + w1 *z1 + w2 *z2;
-
-						int idx = y * screenWidth + x;
-						if (shadowMapBuffer[idx] > z)
-						{
-							shadowMapBuffer[idx] = z;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	OutputDepthBuffer(shadowMapBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
-
 	// Test ShadowMap class
-	{
-		World world;
-		world.gameObjects = gameObjects;
-
-		ShadowMap shadowMap(light);
-		shadowMap.Render(world.gameObjects);
-
-		OutputDepthBuffer(shadowMap.depthBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
-	}
+	ShadowMap shadowMap(light);
+	shadowMap.Render(gameObjects);
+	OutputDepthBuffer(shadowMap.depthBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
 
 	std::unique_ptr<Color[]> frameBuffer(new Color[screenWidth * screenHeight]);
 	std::unique_ptr<float[]> depthBuffer(new float[screenWidth * screenHeight]);
@@ -1085,8 +978,7 @@ void Test_07_ShadowMaps()
 							N = N.normalized();
 
 							Vector3 vWorld = InterpolateVertexAttribute(v0World, v1World, v2World, z0, z1, z2, w0, w1, w2);
-							Vector3 vLightSpace = orthoCamera->WorldToScreenPoint(vWorld);
-							int shadowBufferIdx = (int)(std::roundf(vLightSpace.y) * screenWidth + std::roundf(vLightSpace.x));
+							float shadowFactor = shadowMap.ShadowFactor(vWorld);
 
 							Vector3 reflectDir = reflect(-L, N).normalized();
 							Vector3 viewDir = (camera->transform->localPosition - vWorld).normalized();
@@ -1094,15 +986,7 @@ void Test_07_ShadowMaps()
 							Color diffuse = material->albedo * lightColor * std::max(0.f, Vector3::Dot(N, L));
 							Color specular = material->specular * lightColor * pow(saturate(Vector3::Dot(reflectDir, viewDir)), material->specularGloss);
 
-							float shadowBias = 0.05f;
-							if (vLightSpace.z - shadowBias <= shadowMapBuffer[shadowBufferIdx])
-							{
-								frameBuffer[idx] = ambient + diffuse + specular;
-							}
-							else
-							{
-								frameBuffer[idx] = ambient;
-							}
+							frameBuffer[idx] = (ambient + diffuse + specular) * shadowFactor;
 						}
 					}
 				}

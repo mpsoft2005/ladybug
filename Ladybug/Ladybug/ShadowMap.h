@@ -14,6 +14,7 @@ class ShadowMap : PipelineListener
 public:
 	int width = 512;
 	int height = 512;
+	float shadowBias = 0.05f;
 	std::unique_ptr<float[]> depthBuffer;
 
 private:
@@ -29,5 +30,6 @@ public:
 	~ShadowMap();
 
 	void Render(const std::vector< std::shared_ptr<GameObject> >& gameObjects);
+	float ShadowFactor(const Vector3& v);
 };
 
