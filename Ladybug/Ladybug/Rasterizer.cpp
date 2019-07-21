@@ -825,7 +825,7 @@ void Test_07_ShadowMaps()
 	nearClipping = 0.3f;
 	farClipping = 20;
 
-	float *shadowMapBuffer = new float[Screen::width * Screen::height];
+	std::unique_ptr<float[]> shadowMapBuffer(new float[Screen::width * Screen::height]);
 
 	for (int i = 0; i < Screen::width * Screen::height; i++)
 	{
@@ -834,17 +834,17 @@ void Test_07_ShadowMaps()
 	}
 
 	// setup lights
-	Light light;
-	light.transform->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
-	light.transform->localEulerAngles = Vector3(50, 30, 0);
+	std::shared_ptr<Light> light = std::make_shared<Light>();
+	light->transform->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
+	light->transform->localEulerAngles = Vector3(50, 30, 0);
 
-	light.color = Color(1, 244 / 255.f, 214 / 255.f);
-	light.intensity = 1;
+	light->color = Color(1, 244 / 255.f, 214 / 255.f);
+	light->intensity = 1;
 
 	Vector3 L(-0.3213939f, 0.7660444f, -0.5566704f); // light direction
 
 	Color ambient(0, 0, 0); // ambient color
-	Color lightColor = light.color * light.intensity;
+	Color lightColor = light->color * light->intensity;
 
 	// setup camera
 	//   orthographic projection
@@ -957,21 +957,21 @@ void Test_07_ShadowMaps()
 		}
 	}
 
-	OutputDepthBuffer(shadowMapBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
+	OutputDepthBuffer(shadowMapBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_0_ladybug.bmp");
 
 	// Test ShadowMap class
 	{
 		World world;
 		world.gameObjects = gameObjects;
 
-		ShadowMap shadowMap(&light);
+		ShadowMap shadowMap(light);
 		shadowMap.Render(world);
 
-		OutputDepthBuffer(shadowMap.depthBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
+		OutputDepthBuffer(shadowMap.depthBuffer.get(), nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
 	}
 
-	Color *frameBuffer = new Color[screenWidth * screenHeight];
-	float *depthBuffer = new float[screenWidth * screenHeight];
+	std::unique_ptr<Color[]> frameBuffer(new Color[screenWidth * screenHeight]);
+	std::unique_ptr<float[]> depthBuffer(new float[screenWidth * screenHeight]);
 
 	for (int i = 0; i < screenWidth * screenHeight; i++)
 	{
@@ -1111,7 +1111,5 @@ void Test_07_ShadowMaps()
 		}
 	}
 
-	OutputBitmap(frameBuffer, "Test_07_ShadowMaps_2_no-pcf_bias-0.05_ladybug.bmp");
-
-	delete[] shadowMapBuffer;
+	OutputBitmap(frameBuffer.get(), "Test_07_ShadowMaps_2_no-pcf_bias-0.05_ladybug.bmp");
 }

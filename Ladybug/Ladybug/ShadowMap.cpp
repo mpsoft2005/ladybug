@@ -6,26 +6,24 @@
 #include "Light.h"
 
 
-ShadowMap::ShadowMap(Light* light)
+ShadowMap::ShadowMap(std::shared_ptr<Light> light)
 {
 	this->light = light;
 }
 
-
 ShadowMap::~ShadowMap()
 {
-	delete camera;
-	delete depthBuffer;
+
 }
 
 void ShadowMap::Render(const World& world)
 {
 	if (depthBuffer == nullptr)
 	{
-		depthBuffer = new float[width * height];
+		depthBuffer = std::make_unique<float[]>(width * height);
 	}
 
-	camera = new Camera();
+	camera = std::make_shared<Camera>();
 	camera->transform->localPosition = light->transform->localPosition;
 	camera->transform->localEulerAngles = light->transform->localEulerAngles;
 
@@ -43,7 +41,7 @@ void ShadowMap::Render(const World& world)
 
 	Pipeline pipe;
 	pipe.RegisterListener(this);
-	pipe.Process(world, depthBuffer, nullptr, width, height);
+	pipe.Process(world, depthBuffer.get(), nullptr, width, height);
 }
 
 v2f ShadowMap::OnProcessVertex(const Pipeline& pipe, const a2v& in)

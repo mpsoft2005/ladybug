@@ -1,27 +1,29 @@
 #pragma once
 
+#include <memory>
+
+#include "Light.h"
 #include "Pipeline.h"
 
 class Camera;
-class Light;
 
 class ShadowMap : PipelineListener
 {
 public:
 	int width = 512;
 	int height = 512;
-	float *depthBuffer = 0;
+	std::unique_ptr<float[]> depthBuffer;
 
 private:
-	Light* light;
-	Camera* camera = nullptr;
+	std::shared_ptr<Light> light;
+	std::shared_ptr<Camera> camera;
 
 private:
 	virtual v2f OnProcessVertex(const Pipeline& pipe, const a2v& in);
 	virtual Color OnProcessFragment(const Pipeline& pipe, const v2f& in);
 
 public:
-	ShadowMap(Light* light);
+	ShadowMap(std::shared_ptr<Light> light);
 	~ShadowMap();
 
 	void Render(const World& world);
