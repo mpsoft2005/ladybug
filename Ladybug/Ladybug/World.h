@@ -3,7 +3,7 @@
 #include <vector>
 
 class Camera;
-class DirectionalLight;
+class Light;
 class GameObject;
 class Color;
 
@@ -11,7 +11,7 @@ class World
 {
 public:
 	Camera* camera = 0;
-	DirectionalLight* directionalLight = 0;
+	Light* light = 0;
 	std::vector<GameObject*> gameObjects;
 
 	Color *frameBuffer = 0;

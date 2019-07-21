@@ -3,7 +3,7 @@
 #include "Color.h"
 #include "Transform.h"
 
-class DirectionalLight
+class Light
 {
 public:
 	Transform* transform = 0;
@@ -11,8 +11,8 @@ public:
 	float intensity = 1;
 
 public:
-	DirectionalLight();
-	~DirectionalLight();
+	Light();
+	~Light();
 
 	Vector3 getDirection();
 };

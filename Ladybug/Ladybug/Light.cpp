@@ -1,19 +1,19 @@
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "Matrix4x4.h"
 
 
-DirectionalLight::DirectionalLight()
+Light::Light()
 {
 	transform = new Transform();
 }
 
 
-DirectionalLight::~DirectionalLight()
+Light::~Light()
 {
 	delete transform;
 }
 
-Vector3 DirectionalLight::getDirection()
+Vector3 Light::getDirection()
 {
 	Matrix4x4 R = Matrix4x4::Rotate(transform->localEulerAngles);
 	Vector3 lightDir = R.MultiplyPoint3x4(-Vector3::forward);

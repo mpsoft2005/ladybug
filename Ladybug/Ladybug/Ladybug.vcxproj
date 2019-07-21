@@ -122,7 +122,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Color32.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mathf.h" />
@@ -149,7 +149,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Color32.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />

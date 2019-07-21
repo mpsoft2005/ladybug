@@ -3,7 +3,7 @@
 #include "Color.h"
 #include "Screen.h"
 #include "Camera.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "GameObject.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -18,7 +18,7 @@ World::World()
 World::~World()
 {
 	delete camera;
-	delete directionalLight;
+	delete light;
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{
@@ -84,10 +84,10 @@ void World::Render()
 	}
 
 	// light direction
-	Vector3 L = directionalLight->getDirection();
+	Vector3 L = light->getDirection();
 
 	Color ambient(0, 0, 0); // ambient color
-	Color lightColor = directionalLight->color * directionalLight->intensity;
+	Color lightColor = light->color * light->intensity;
 
 	for (size_t i = 0; i < gameObjects.size(); i++)
 	{

@@ -17,7 +17,7 @@
 #include "Test.h"
 #include "SVG.h"
 #include "ObjLoader.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 #include "Screen.h"
 #include "Camera.h"
 #include "Mathf.h"
@@ -151,7 +151,7 @@ void test_Rasterization()
 	}
 
 	// setup lights
-	DirectionalLight light;
+	Light light;
 	light.color = Color(1, 244 / 255.f, 214 / 255.f);
 	light.intensity = 1;
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
@@ -301,7 +301,7 @@ void Test_03_SmoothSphere_Diffuse()
 	}
 
 	// setup lights
-	DirectionalLight light;
+	Light light;
 	light.color = Color(1, 244 / 255.f, 214 / 255.f);
 	light.intensity = 1;
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
@@ -453,7 +453,7 @@ void Test_04_NormalInterpolation()
 	}
 
 	// setup lights
-	DirectionalLight light;
+	Light light;
 	light.color = Color(1, 244 / 255.f, 214 / 255.f);
 	light.intensity = 1;
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
@@ -625,7 +625,7 @@ void Test_06_Specular()
 	}
 
 	// setup lights
-	DirectionalLight light;
+	Light light;
 	light.color = Color(1, 244 / 255.f, 214 / 255.f);
 	light.intensity = 1;
 	Vector3 L(0.3213938f, 0.7660444f, -0.5566705f); // light direction
@@ -788,11 +788,11 @@ void Test_06_Specular_World()
 	world.camera->farClipPlane = 1000;
 
 	// setup lights
-	world.directionalLight = new DirectionalLight();
-	world.directionalLight->color = Color(1, 244 / 255.f, 214 / 255.f);
-	world.directionalLight->intensity = 1;
+	world.light = new Light();
+	world.light->color = Color(1, 244 / 255.f, 214 / 255.f);
+	world.light->intensity = 1;
 
-	t = world.directionalLight->transform;
+	t = world.light->transform;
 	t->localPosition = Vector3(0, 3, 0);
 	t->localEulerAngles = Vector3(50, -30, 0);
 
@@ -830,7 +830,7 @@ void Test_07_ShadowMaps()
 	}
 
 	// setup lights
-	DirectionalLight light;
+	Light light;
 	light.transform->localPosition = Vector3(-2.6f, 4.28f, -4.5f);
 	light.transform->localEulerAngles = Vector3(50, 30, 0);
 

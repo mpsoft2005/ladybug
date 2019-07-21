@@ -3,10 +3,10 @@
 #include "Camera.h"
 #include "Screen.h"
 #include "Pipeline.h"
-#include "DirectionalLight.h"
+#include "Light.h"
 
 
-ShadowMap::ShadowMap(DirectionalLight* light)
+ShadowMap::ShadowMap(Light* light)
 {
 	this->light = light;
 }

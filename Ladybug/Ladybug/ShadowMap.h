@@ -3,7 +3,7 @@
 #include "Pipeline.h"
 
 class Camera;
-class DirectionalLight;
+class Light;
 
 class ShadowMap : PipelineListener
 {
@@ -13,7 +13,7 @@ public:
 	float *depthBuffer = 0;
 
 private:
-	DirectionalLight* light;
+	Light* light;
 	Camera* camera = nullptr;
 
 private:
@@ -21,7 +21,7 @@ private:
 	virtual Color OnProcessFragment(const Pipeline& pipe, const v2f& in);
 
 public:
-	ShadowMap(DirectionalLight* light);
+	ShadowMap(Light* light);
 	~ShadowMap();
 
 	void Render(const World& world);
