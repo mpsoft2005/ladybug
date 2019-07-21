@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 class Camera;
 class Light;
@@ -10,9 +11,9 @@ class Color;
 class World
 {
 public:
-	Camera* camera = 0;
-	Light* light = 0;
-	std::vector<GameObject*> gameObjects;
+	std::shared_ptr<Camera> camera;
+	std::shared_ptr<Light> light;
+	std::vector< std::shared_ptr<GameObject> > gameObjects;
 
 	Color *frameBuffer = 0;
 	float *depthBuffer = 0;

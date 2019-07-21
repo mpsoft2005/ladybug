@@ -17,13 +17,6 @@ World::World()
 
 World::~World()
 {
-	delete camera;
-	delete light;
-
-	for (size_t i = 0; i < gameObjects.size(); i++)
-	{
-		delete gameObjects[i];
-	}
 	delete[] frameBuffer;
 	delete[] depthBuffer;
 }

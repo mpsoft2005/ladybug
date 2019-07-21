@@ -778,7 +778,7 @@ void Test_06_Specular_World()
 
 	// setup camera
 	{
-		world.camera = new Camera();
+		world.camera = std::make_shared<Camera>();
 
 		Transform& t = *world.camera->transform;
 		t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
@@ -791,7 +791,7 @@ void Test_06_Specular_World()
 
 	// setup lights
 	{
-		world.light = new Light();
+		world.light = std::make_shared<Light>();
 		world.light->color = Color(1, 244 / 255.f, 214 / 255.f);
 		world.light->intensity = 1;
 
@@ -801,9 +801,9 @@ void Test_06_Specular_World()
 	}
 
 	// setup game objects
-	GameObject* object;
+	std::shared_ptr<GameObject> object;
 
-	object = new GameObject();
+	object = std::make_shared<GameObject>();
 	object->mesh = ObjLoader::Load("sphere_1.obj");
 	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
@@ -865,10 +865,10 @@ void Test_07_ShadowMaps()
 	}
 
 	// setup game objects
-	GameObject* object;
-	std::vector<GameObject*> gameObjects;
+	std::shared_ptr<GameObject> object;
+	std::vector< std::shared_ptr<GameObject> > gameObjects;
 
-	object = new GameObject();
+	object = std::make_shared<GameObject>();
 	object->mesh = ObjLoader::Load("sphere_1.obj");
 	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
@@ -876,7 +876,7 @@ void Test_07_ShadowMaps()
 	object->material->specularGloss = 20;
 	gameObjects.push_back(object);
 
-	object = new GameObject();
+	object = std::make_shared<GameObject>();
 	object->mesh = ObjLoader::Load("ground_1.obj");
 	object->material = std::make_shared<Material>();
 	object->material->albedo = Color(1, 1, 1);
@@ -968,7 +968,6 @@ void Test_07_ShadowMaps()
 		shadowMap.Render(world);
 
 		OutputDepthBuffer(shadowMap.depthBuffer, nearClipping, farClipping, "Test_07_ShadowMaps_1_ladybug.bmp");
-		world.gameObjects = std::vector<GameObject*>();
 	}
 
 	Color *frameBuffer = new Color[screenWidth * screenHeight];
@@ -1114,9 +1113,5 @@ void Test_07_ShadowMaps()
 
 	OutputBitmap(frameBuffer, "Test_07_ShadowMaps_2_no-pcf_bias-0.05_ladybug.bmp");
 
-	for (size_t i = 0; i < gameObjects.size(); i++)
-	{
-		delete gameObjects[i];
-	}
 	delete[] shadowMapBuffer;
 }
