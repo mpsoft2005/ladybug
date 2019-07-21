@@ -14,7 +14,7 @@ Light::~Light()
 
 }
 
-Vector3 Light::getDirection()
+Vector3 Light::GetDirection()
 {
 	Matrix4x4 R = Matrix4x4::Rotate(transform->localEulerAngles);
 	Vector3 lightDir = R.MultiplyPoint3x4(-Vector3::forward);

@@ -104,7 +104,7 @@ Color World::OnProcessFragment(const Pipeline& pipe, const v2f& in)
 	Color lightColor = light->color * light->intensity;
 
 	// light direction
-	Vector3 L = light->getDirection();
+	Vector3 L = light->GetDirection();
 	Vector3 N = in.normal;
 
 	Vector3 vWorld = in.worldPos;

@@ -26,11 +26,10 @@ public:
 	LightShadows shadows = LightShadows::SHADOW_NONE;
 	float shadowBias = 0.05f;
 
-
 public:
 	Light();
 	~Light();
 
-	Vector3 getDirection();
+	Vector3 GetDirection();
 	float ShadowFactor(const World& world, const Vector3& v);
 };
