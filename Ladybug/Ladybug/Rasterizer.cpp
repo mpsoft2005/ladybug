@@ -813,7 +813,7 @@ void Test_06_Specular_World()
 	world.gameObjects.push_back(object);
 
 	world.Render();
-	OutputBitmap(world.frameBuffer, "Test_06_Specular_World_ladybug.bmp");
+	OutputBitmap(world.frameBuffer.get(), "Test_06_Specular_World_ladybug.bmp");
 }
 
 

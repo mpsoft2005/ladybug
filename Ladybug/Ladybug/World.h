@@ -15,8 +15,11 @@ public:
 	std::shared_ptr<Light> light;
 	std::vector< std::shared_ptr<GameObject> > gameObjects;
 
-	Color *frameBuffer = 0;
-	float *depthBuffer = 0;
+	std::unique_ptr<Color[]> frameBuffer;
+	std::unique_ptr<float[]> depthBuffer;
+
+private:
+	void PrepareBuffers();
 
 public:
 	World();

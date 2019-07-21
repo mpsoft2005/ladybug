@@ -12,13 +12,13 @@
 
 World::World()
 {
+
 }
 
 
 World::~World()
 {
-	delete[] frameBuffer;
-	delete[] depthBuffer;
+
 }
 
 // calc signed area of parallelogram
@@ -54,17 +54,22 @@ static inline float saturate(float v)
 	return v;
 }
 
-void World::Render()
+void World::PrepareBuffers()
 {
-	if (frameBuffer == NULL)
+	if (frameBuffer == nullptr)
 	{
-		frameBuffer = new Color[Screen::width * Screen::height];
+		frameBuffer = std::make_unique<Color[]>(Screen::width * Screen::height);
 	}
 
-	if (depthBuffer == NULL)
+	if (depthBuffer == nullptr)
 	{
-		depthBuffer = new float[Screen::width * Screen::height];
+		depthBuffer = std::make_unique<float[]>(Screen::width * Screen::height);
 	}
+}
+
+void World::Render()
+{
+	PrepareBuffers();
 
 	for (int i = 0; i < Screen::width * Screen::height; i++)
 	{
