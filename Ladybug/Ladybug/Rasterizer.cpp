@@ -816,7 +816,6 @@ void Test_06_Specular_World()
 	OutputBitmap(world.frameBuffer.get(), "Test_06_Specular_World_ladybug.bmp");
 }
 
-
 void Test_07_ShadowMaps()
 {
 	Screen::width = 512;
@@ -984,7 +983,7 @@ void Test_07_ShadowMaps()
 	}
 
 	// setup camera
-	Camera* camera = new Camera();
+	std::shared_ptr<Camera> camera(new Camera());
 	{
 		Transform& t = *camera->transform;
 		t.localPosition = Vector3(7.48113f, 5.34367f, -6.50764f);
@@ -1112,4 +1111,12 @@ void Test_07_ShadowMaps()
 	}
 
 	OutputBitmap(frameBuffer.get(), "Test_07_ShadowMaps_2_no-pcf_bias-0.05_ladybug.bmp");
+
+	World world;
+	world.camera = camera;
+	world.light = light;
+	world.gameObjects = gameObjects;
+	world.Render();
+
+	OutputBitmap(world.frameBuffer.get(), "Test_07_ShadowMaps_3_only-specular_ladybug.bmp");
 }

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
+
 #include "Vector2.h"
 #include "Vector3.h"
 
 class Color;
 class World;
 class Pipeline;
+class Material;
 
 struct a2v
 {
@@ -20,6 +23,7 @@ struct v2f
 	Vector3 worldPos;
 	Vector3 normal;
 	Vector2 uv;
+	std::shared_ptr<Material> material;
 };
 
 class PipelineListener

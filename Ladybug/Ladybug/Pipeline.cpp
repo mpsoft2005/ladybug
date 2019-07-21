@@ -40,24 +40,24 @@ void Pipeline::RegisterListener(PipelineListener* listener)
 	this->listener = listener;
 }
 
+// OpenGL Rasterization Algorithm
+//   https://en.wikibooks.org/wiki/GLSL_Programming/Rasterization
+//
+// Mesa 3D Rasterizer
+//   https://github.com/anholt/mesa/blob/master/src/gallium/docs/source/cso/rasterizer.rst
+//
+// Triangle rasterization in practice
+//   https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
+//
 void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffer, int screenWidth, int screenHeight)
 {
 	bool orthographic = world.camera->orthographic;
 
 	for (size_t i = 0; i < world.gameObjects.size(); i++)
 	{
-		Mesh* mesh = world.gameObjects[i]->mesh.get();
-		Material* material = world.gameObjects[i]->material.get();
+		std::shared_ptr<Mesh> mesh = world.gameObjects[i]->mesh;
+		std::shared_ptr<Material> material = world.gameObjects[i]->material;
 		size_t numTris = mesh->triangles.size() / 3;
-
-		// OpenGL Rasterization Algorithm
-		// https://en.wikibooks.org/wiki/GLSL_Programming/Rasterization
-
-		// Mesa 3D Rasterizer
-		// https://github.com/anholt/mesa/blob/master/src/gallium/docs/source/cso/rasterizer.rst
-
-		// Triangle rasterization in practice
-		// https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 
 		for (size_t idx = 0; idx < numTris; ++idx)
 		{
@@ -136,27 +136,16 @@ void Pipeline::Process(const World& world, float *depthBuffer, Color *frameBuffe
 						if (depthBuffer[idx] > z)
 						{
 							depthBuffer[idx] = z;
-
-							// Transforming Normal Vectors
-							// https://en.wikibooks.org/wiki/GLSL_Programming/Applying_Matrix_Transformations
-
-							const Vector3& N0 = f[0].normal;
-							const Vector3& N1 = f[1].normal;
-							const Vector3& N2 = f[2].normal;
-
-							Vector3 N = InterpolateVertexAttribute(N0, N1, N2, z0, z1, z2, w0, w1, w2);
-
-							// Remember that an interpolated normal is typically not normalized?
-							N = N.normalized();
-
+							Vector3 N = InterpolateVertexAttribute(f[0].normal, f[1].normal, f[2].normal, z0, z1, z2, w0, w1, w2);
 							Vector3 vWorld = InterpolateVertexAttribute(v[0], v[1], v[2], z0, z1, z2, w0, w1, w2);
 
 							if (frameBuffer != nullptr)
 							{
 								v2f f;
 								f.pos = v0Raster * w0 + v1Raster * w1 + v2Raster * w2;
+								f.normal = N.normalized();
 								f.worldPos = vWorld;
-								f.normal = N;
+								f.material = material;
 								frameBuffer[idx] = listener->OnProcessFragment(*this, f);
 							}
 						}
