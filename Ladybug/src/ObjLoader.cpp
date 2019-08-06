@@ -32,6 +32,8 @@ struct Vertex
 	}
 };
 
+std::string ObjLoader::base_dir = "";
+
 ObjLoader::ObjLoader()
 {
 }
@@ -104,10 +106,12 @@ inline Vector3 ConvertNormal(const Vector3& n)
 
 std::shared_ptr<Mesh> ObjLoader::Load(const char* filename)
 {
-	FILE * file = fopen(filename, "r");
+	std::string fullpath = base_dir + filename;
+
+	FILE * file = fopen(fullpath.c_str(), "r");
 	if (file == NULL)
 	{
-		printf("Cannot open obj file:%s\n", filename);
+		printf("Cannot open obj file:%s\n", fullpath.c_str());
 		return NULL;
 	}
 
