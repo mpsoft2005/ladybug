@@ -12,5 +12,5 @@ msbuild ladybug.sln
 
 ```Shell
 cd build
-Debug\ladybug.exe ..\..\Data\TestModels
+Debug\ladybug.exe ..\..\Data\Models
 ```
